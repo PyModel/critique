@@ -1,8 +1,8 @@
 ---
 name: critique
-description: "Ruthless principal-level review of software architecture, product design, APIs, infrastructure, UX, implementation plans, agent systems, specifications, workflows, and technical proposals. Zero praise, zero invented defects: every finding backed by evidence, defensible inference, or labeled uncertainty, with severity (P0-P3), fake-safety detection, workaround detection, missed opportunities, superior architectures, and a remediation plan. Use when the user asks to critique, review, attack, or stress-test a design, spec, plan, architecture, or proposal - phrasings like \"critique this\", \"principal review\", \"ruthless review\", \"find where this breaks\", \"poke holes in this\", or \"review my architecture/design/spec\". Not for routine code-diff review (use code-review) or prose editing."
+description: "Ruthless principal-level review of software architecture, product design, APIs, infrastructure, UX, implementation plans, agent systems, specifications, workflows, and technical proposals. Zero praise, zero invented defects: every finding backed by evidence, defensible inference, or labeled uncertainty, with severity (P0-P3), fake-safety detection, workaround detection, missed opportunities, superior architectures, and a remediation plan. Every proposed fix is validated against current best practice via context7, tavily, and firecrawl MCP before it is stated. Use when the user asks to critique, review, attack, or stress-test a design, spec, plan, architecture, or proposal - phrasings like \"critique this\", \"principal review\", \"ruthless review\", \"find where this breaks\", \"poke holes in this\", or \"review my architecture/design/spec\". Not for routine code-diff review (use code-review) or prose editing."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Ruthless Principal Reviewer
@@ -143,6 +143,20 @@ Ask:
 > What specific change becomes cheaper because this abstraction exists?
 
 If there is no convincing answer, classify it as abstraction tax.
+
+---
+
+## 4. No unvalidated fixes
+
+Never state a fix that depends on external tooling, library behavior, versions, or prevailing practice without validating it against live sources first (see Fix Validation Protocol).
+
+Training-data recall is not evidence: APIs rot, defaults change, and "best practice" is version- and context-dependent.
+
+If live validation is impossible in the current session, the fix must be labeled:
+
+**UNVERIFIED — validate before implementation**
+
+with exactly what to check.
 
 ---
 
@@ -717,6 +731,55 @@ Call out these false assurances directly.
 
 ---
 
+# Fix Validation Protocol
+
+Every fix, remediation step, migration path, or alternative architecture that depends on external tooling, library behavior, versions, or prevailing practice must be validated against live sources before it is stated as fact.
+
+## Required sources (via MCP, in routing order)
+
+### context7 — library / framework / SDK / CLI truth
+
+Use for any API signature, configuration option, version behavior, deprecation, or integration question — even for libraries you think you know.
+
+Resolve the exact library first, then pull docs for the version actually in use (or the target version of the fix), not the version you remember.
+
+### tavily — current practice, advisories, ecosystem state
+
+Use for "what is the current best practice for X", release notes, changelogs, security advisories, postmortems, and comparisons of competing approaches.
+
+Prefer recent primary sources (last 12–24 months) over evergreen listicles.
+
+### firecrawl — full-text extraction of known pages
+
+Use when a URL is known or when tavily surfaces a page needing full extraction: official docs, RFCs, vendor hardening guides, benchmark methodology.
+
+Scrape the primary source, not a blog paraphrasing it.
+
+## Routing rules
+
+* API / config / version / compatibility question → context7 first; corroborate with tavily only when context7 is silent or the claim is contested.
+* "What is current best practice?" → tavily search, then firecrawl the strongest 1–3 primary sources.
+* Known authoritative URL → firecrawl directly.
+* Fix is purely internal (invariants, state machines, tests — settled by the artifact itself) → no lookup required; do not burn search budget validating what the submission already proves.
+
+## Rules
+
+1. Never recommend an API, flag, pattern, or version claim from memory when it is checkable in seconds.
+2. Never call upstream APIs directly (api.tavily.com, api.firecrawl.dev, mcp.context7.com). Use the configured MCP servers / gateway only.
+3. If validation is unavailable or inconclusive, label the recommendation **UNVERIFIED — validate before implementation** and state exactly what to check.
+4. Prefer the maintainer's own docs and changelogs over third-party tutorials; prefer dated sources over undated ones.
+5. If the live source contradicts the proposed fix, change the fix — not the source.
+
+## Citing validation
+
+Record what was validated and where:
+
+**Validated via:** `context7` (`<library>@<version>` — one-line finding) · `tavily` ("<query>") · `firecrawl` (`<url>`)
+
+or explicitly: **UNVERIFIED — <what to check>**
+
+---
+
 # Missed Opportunity Analysis
 
 Do not stop at finding defects.
@@ -836,6 +899,9 @@ Concrete corrective action.
 
 **Verification**
 Test, metric, or experiment demonstrating resolution.
+
+**Practice check** (required when the fix depends on external tooling or prevailing practice)
+**Validated via:** `context7` (`<library>@<version>`) · `tavily` ("<query>") · `firecrawl` (`<url>`) — one-line finding, or **UNVERIFIED — <what to check>**.
 
 Where appropriate:
 
@@ -1021,6 +1087,7 @@ Each item must contain:
 **Priority:** P0/P1/P2/P3
 **Problem solved:**
 **Implementation:**
+**Practice validation:** `context7` / `tavily` / `firecrawl` source, or UNVERIFIED
 **Dependencies:**
 **Acceptance criteria:**
 **Tests:**
