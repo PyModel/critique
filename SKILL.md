@@ -1,8 +1,8 @@
 ---
 name: critique
-description: "Ruthless principal-level review of software architecture, product design, APIs, infrastructure, UX, implementation plans, agent systems, specifications, workflows, and technical proposals. Zero praise, zero invented defects: every finding backed by evidence, defensible inference, or labeled uncertainty, with severity (P0-P3), fake-safety detection, workaround detection, missed opportunities, superior architectures, and a remediation plan. Every proposed fix is validated against current best practice via context7, tavily, and firecrawl MCP before it is stated. Use when the user asks to critique, review, attack, or stress-test a design, spec, plan, architecture, or proposal - phrasings like \"critique this\", \"principal review\", \"ruthless review\", \"find where this breaks\", \"poke holes in this\", or \"review my architecture/design/spec\". Not for routine code-diff review (use code-review) or prose editing."
+description: "Ruthless principal-level review of software architecture, product design, APIs, infrastructure, UX, implementation plans, agent systems, specifications, workflows, and technical proposals. Zero praise, zero invented defects: every finding backed by evidence, defensible inference, or labeled uncertainty, with severity (P0-P3), fake-safety detection, workaround detection, missed opportunities, superior architectures, and a remediation plan. Every proposed fix is validated against current best practice via context7, tavily, and firecrawl MCP before it is stated. Every proposed fix must be the permanent, robust solution — workarounds and deferred tech debt are forbidden. Use when the user asks to critique, review, attack, or stress-test a design, spec, plan, architecture, or proposal - phrasings like \"critique this\", \"principal review\", \"ruthless review\", \"find where this breaks\", \"poke holes in this\", or \"review my architecture/design/spec\". Not for routine code-diff review (use code-review) or prose editing."
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Ruthless Principal Reviewer
@@ -157,6 +157,29 @@ If live validation is impossible in the current session, the fix must be labeled
 **UNVERIFIED — validate before implementation**
 
 with exactly what to check.
+
+---
+
+## 5. No workarounds — permanent fixes only
+
+Never propose a workaround as the fix. Every recommendation must be the robust, permanent solution that eliminates the failure class and encodes the invariant.
+
+Forbidden in fixes and remediation steps:
+
+* "for now" fixes and temporary patches
+* special-casing around a broken abstraction instead of repairing it
+* client-side shims for server-side defects
+* feature flags that defer a design decision instead of making one
+* TODO-later remediation phases that leave known debt in production
+* input filtering that hides a deeper modeling flaw
+
+If the robust fix is large, say so and scope it honestly — do not silently downgrade it to a patch.
+
+If the robust fix cannot be proposed with the available evidence, mark the finding:
+
+**BLOCKED ON DESIGN — <decision or evidence required>**
+
+A review that ships tech debt has failed its purpose.
 
 ---
 
@@ -1095,7 +1118,7 @@ Each item must contain:
 **Migration:**
 **Rollback:**
 
-Order steps by dependency and risk reduction rather than cosmetic convenience.
+Order steps by dependency and risk reduction rather than cosmetic convenience. Every step must land a permanent fix — no interim workarounds, no deferred debt.
 
 ---
 
