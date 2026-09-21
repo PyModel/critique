@@ -2,6 +2,24 @@
 
 All notable changes to the `critique` skill. Format: semver; breaking changes bump the minor until 1.0.
 
+## 0.6.0
+
+Whole-codebase mode, senior-mindset enforcement, and leverage-ranked output.
+
+### Added
+
+- `packs/codebase.md` — whole-codebase audit pack: survey, risk-stratified depth, coverage ledger, leverage-ranked improvements.
+- `passes/pass-21-codebase-survey.md` — survey (entry points, data flow, hot paths, conventions), Tier A/B/C stratification, coverage ledger, codebase-specific attack surface (death-by-a-thousand-cuts, convention drift, config traps, repository rot).
+- **Senior Engineering Mindset** (kernel) — seven enforced disciplines: mechanism before verdict, quantify or name the measurement, every fix states its cost, no cargo-cult, own the outcome, leverage over volume, reframe before reviewing.
+- Routing Table row and Input Contract entry for codebase artifacts.
+- Purpose now mandates leverage ranking: every review ends with the highest-leverage improvements ordered by impact / engineering cost.
+- Self-Gate check 5: failure mechanism, fix cost, and leverage ranking verified before output.
+
+### Changed
+
+- Description advertises codebase audits and level-up triggers (816 → ~940 chars, trigger-only).
+- `HOW_TO_EXTEND.md` examples use `pass-NN` placeholders — ends the recurring example-id collision class (examples collided with real passes 17 and 21 in consecutive releases).
+
 ## 0.5.0
 
 Added a code review-and-refactor mode, registered through the v0.4.0 extension seam.
