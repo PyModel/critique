@@ -2,6 +2,26 @@
 
 All notable changes to the `critique` skill. Format: semver; breaking changes bump the minor until 1.0.
 
+## 0.5.0
+
+Added a code review-and-refactor mode, registered through the v0.4.0 extension seam.
+
+### Added
+
+- `packs/code.md` — pack for exhaustive production-grade review and refactoring of source code.
+- `passes/pass-17-code-architecture.md` — SOLID, separation of concerns, DRY-vs-YAGNI boundary at code level.
+- `passes/pass-18-thread-safety.md` — mechanism-level concurrency: shared mutable state, lock ordering/deadlock, async task lifecycle, non-blocking resource-safe execution.
+- `passes/pass-19-idempotency-integrity.md` — retry safety, transactional integrity, deterministic execution, state-machine integrity for mutations.
+- `passes/pass-20-execution-order.md` — lifecycle ordering (validate → retrieve → logic → mutate → return) and fail-fast error handling.
+- **Code tier** output in the kernel: Critical Audit → Refactored Implementation → Key Trade-offs, with behavior-preservation flags, language-idiom rule, complexity-delta requirement for performance findings, and validation of every added/changed library call.
+- Routing Table row and depth-tier entry for code submissions; boundary kept sharp — routine diffs/PRs still belong to `code-review`.
+
+### Changed
+
+- `passes/pass-09-performance.md` — added code-level items (loop allocations, N+1, redundant I/O, algorithmic complexity) and a source-code trigger; performance findings on code must state time/space complexity deltas.
+- Frontmatter description rewritten to advertise the code mode (743 → ~930 chars, still trigger-focused).
+- `HOW_TO_EXTEND.md` example ids bumped pass-17 → pass-21 to free the 17–20 range occupied by real passes.
+
 ## 0.4.0
 
 Restructured from a single monolithic prompt into kernel + passes + packs.

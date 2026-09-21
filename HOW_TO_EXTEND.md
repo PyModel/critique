@@ -8,7 +8,7 @@ Every file in `passes/` follows this contract:
 
 ```markdown
 ---
-id: pass-17-compliance
+id: pass-21-compliance
 name: Compliance
 triggers:
   - regulated data (PII, payments, health) is mentioned or implied
@@ -16,7 +16,7 @@ triggers:
 depends_on: [pass-06-data-model]
 ---
 
-## Pass 17 — Compliance
+## Pass 21 — Compliance
 
 Attack list (specific, evidence-checkable items — not vibes).
 
@@ -57,8 +57,10 @@ A pack is a run-ordered list of pass files plus Notes. Copy `packs/api.md` as a 
 
 Adding accessibility coverage:
 
-1. `passes/pass-17-accessibility.md` — triggers: "a user-facing interface is under review"; depends_on: `pass-10-ux`.
+1. `passes/pass-21-accessibility.md` — triggers: "a user-facing interface is under review"; depends_on: `pass-10-ux`.
 2. Add to `packs/ux.md` run order after Pass 10.
 3. Done — the next UX review attacks contrast ratios, focus order, screen-reader semantics, and touch targets without any kernel edit.
 
-To verify registration: run a critique on a UI submission and confirm the Executive Assessment's coverage disclosure lists Pass 17.
+To verify registration: run a critique on a UI submission and confirm the Executive Assessment's coverage disclosure lists Pass 21.
+
+For a real worked example, read `passes/pass-19-idempotency-integrity.md` and `packs/code.md` — added in v0.5.0 through exactly this seam.
