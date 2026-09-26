@@ -1,32 +1,15 @@
 # Pack: code
 
-Exhaustive production-grade review and refactoring of source code, in the submission's language.
+Source code: a file, module, or snippet, reviewed and replaced with root-cause production code in its own language.
 
-## Passes (in run order)
+Membership only. A listed pass runs iff its triggers match; order is fixed by the kernel (phase, then number).
 
-1. `passes/pass-01-assumptions.md`
-2. `passes/pass-02-correctness.md`
-3. `passes/pass-03-failure-semantics.md`
-4. `passes/pass-14-maintainability.md`
-5. `passes/pass-17-code-architecture.md`
-6. `passes/pass-20-execution-order.md`
-7. `passes/pass-19-idempotency-integrity.md`
-8. `passes/pass-18-thread-safety.md` (when triggers match)
-9. `passes/pass-09-performance.md` (always for code)
-10. `passes/pass-13-testing.md`
-11. `passes/pass-16-simplicity.md` (last)
+## Passes
 
-Add when applicable:
-
-- `passes/pass-04-concurrency.md` — business flows where duplicate scenarios matter (webhook handlers, payments, cart mutations)
-- `passes/pass-05-security.md` — auth, API surface, or untrusted input handling
-- `passes/pass-06-data-model.md` — persistence code
-- `passes/pass-08-scalability.md` — explicit scale claims
+01 assumptions · 02 correctness · 03 failure-semantics · 04 concurrency · 05 security · 06 data-model · 08 scalability · 09 performance · 13 testing · 14 maintainability · 16 simplicity · 17 code-architecture · 18 thread-safety · 19 idempotency-integrity · 20 execution-order · 22 state-invariants · 23 resource-bounds · 24 agent-systems · 25 tech-debt
 
 ## Notes
 
-- Output uses the kernel's **Code tier**: Critical Audit → Refactored Implementation → Key Trade-offs.
-- The refactored code is a fix: every added or changed library/API call goes through the Fix Validation Protocol.
-- Write the refactor in the submission's language and idioms; flag every deliberate behavior change inline.
-- Performance findings must state time/space complexity deltas.
-- Pass 17 and Pass 4/18 must not double-report the same concurrency defect — 18 owns the mechanism, 4 owns the scenario.
+- Output uses the Code tier. Replacement Implementation is on by default; audit-only only when the user asks.
+- Concurrency: Pass 4 owns the scenario, Pass 18 the mechanism, Pass 2 only when neither runs. Report once.
+- Performance findings state time/space complexity deltas.

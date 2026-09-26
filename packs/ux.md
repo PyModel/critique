@@ -1,25 +1,14 @@
 # Pack: ux
 
-UI, UX, and user-facing product flow reviews.
+UI, UX, and user-facing product-flow reviews.
 
-## Passes (in run order)
+Membership only. A listed pass runs iff its triggers match; order is fixed by the kernel (phase, then number).
 
-1. `passes/pass-01-assumptions.md`
-2. `passes/pass-02-correctness.md`
-3. `passes/pass-03-failure-semantics.md`
-4. `passes/pass-10-ux.md`
-5. `passes/pass-09-performance.md`
-6. `passes/pass-13-testing.md`
-7. `passes/pass-16-simplicity.md`
+## Passes
 
-Add when the flow writes data or calls a backend:
-
-- `passes/pass-05-security.md`
-- `passes/pass-06-data-model.md`
-- `passes/pass-07-api-contract.md`
-- `passes/pass-04-concurrency.md`
+01 assumptions · 02 correctness · 03 failure-semantics · 04 concurrency · 05 security · 06 data-model · 07 api-contract · 09 performance · 10 ux · 13 testing · 16 simplicity · 22 state-invariants · 25 tech-debt
 
 ## Notes
 
-- The core UX question drives this pack: what does the user believe happened, and how does that differ from system state?
-- Destructive or irreversible actions always pull in Security and Failure Semantics regardless of pack size.
+- Core question: what does the user believe happened, and how does that differ from system state?
+- Destructive or irreversible actions always engage 03 and 05.
