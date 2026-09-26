@@ -1,10 +1,8 @@
 # How to Extend This Skill
 
-The skill has one extension seam: **a pass is a file**. The kernel (`SKILL.md`) never needs editing to add review coverage.
+Two extension seams: **a pass is a file**, and **a pack is a file plus one Routing Table row**. `scripts/check.py` verifies the wiring; run it after every change.
 
 ## Anatomy of a pass
-
-Every file in `passes/` follows this contract:
 
 ```markdown
 ---
@@ -13,56 +11,50 @@ name: Compliance
 triggers:
   - regulated data (PII, payments, health) is mentioned or implied
   - audit, retention, or residency requirements appear in the submission
-depends_on: [pass-06-data-model]
+phase: attack
 ---
 
 ## Pass NN — Compliance
 
-Attack list (specific, evidence-checkable items — not vibes).
+Attack list: specific, evidence-checkable items, not vibes.
 
 Closing question the pass must answer.
+
+Dedupe: which neighbouring pass owns overlapping defects.
 ```
 
-(`NN` is the next free number — check `passes/` for the current highest. Never reuse a live id.)
+`NN` is the next free number — check `passes/` for the highest. Never reuse or renumber a live id.
 
 Field semantics:
 
-- **`id`** — unique, stable, kebab-case, prefixed `pass-NN-`.
-- **`triggers`** — conditions under which the pass is applicable. The kernel's rule: *a pass is applicable iff its triggers match the submission.* Write them as checkable phrases about the artifact, not about mood. Use `always` for passes that run on every review (currently: assumptions, correctness, failure semantics, testing, simplicity).
-- **`depends_on`** — pass ids that should run first, so the pass can build on their findings.
+- **`id`** — equals the filename without `.md`.
+- **`triggers`** — checkable conditions about the artifact. The kernel rule: *a pass runs iff it is a member of a selected pack and its triggers match.* `always` runs on every review.
+- **`phase`** — `frame` (reconstruct the problem before attacking: 01, 21), `attack` (default), or `synthesize` (judges the others' output: 16). Execution order is phase, then number. There is no per-pass ordering beyond that — if a pass truly needs another's output, it belongs in a later phase.
 
-## Registration: drop the file, add one line
+## Registering a pass
 
-1. Create `passes/pass-NN-name.md` with the frontmatter above.
-2. Add it to any `packs/*.md` run order where it belongs (or create a new pack — see below).
+1. Create `passes/pass-NN-name.md`.
+2. Add `NN name` to every pack it belongs to, including `packs/full.md`.
+3. Run `python3 scripts/check.py`.
 
-That is the entire registration. The kernel's Routing Table and Lifecycle pick it up; no other file changes. If the pass introduces a genuinely new output concern, add it to the Full-tier output structure in the kernel — otherwise render findings through the standard Finding Format and it needs nothing.
+No kernel edit. If the pass introduces a new output concern, add a row to the Output table in `SKILL.md`; otherwise its findings use the standard Finding Format.
 
-## Hooks
+## Creating a pack
 
-Two named points in the lifecycle accept extension behavior:
+1. Copy `packs/api.md`; list member passes by `NN name`.
+2. Add one row to the Routing Table in `SKILL.md`.
+3. Run `python3 scripts/check.py`.
 
-- **`on_scope`** — a pack's Notes section may add conditional passes ("joins when the flow writes data").
-- **`on_gate`** — a pass may declare extra Bulletproof Gate evidence requirements; state them in a `## Gate additions` section of the pass file.
+Packs reference passes, never other packs.
 
-## Creating a domain pack
+## Rules every extension obeys
 
-A pack is a run-ordered list of pass files plus Notes. Copy `packs/api.md` as a template. Keep packs composable: a pack references passes, never other packs.
-
-## Rules every extension must obey
-
-1. No invented defects: a checklist item that matches nothing in the artifact is skipped silently (kernel Hard Rule 1 — global, applies to your pass too).
-2. If your pass finds a defect another pass will also find, say which pass reports it; never double-report.
-3. Fixes your pass produces follow the kernel's Fix Validation Protocol unchanged — do not add your own validation rules.
+1. No invented defects — an item that matches nothing in the artifact is skipped silently (Hard Rule 1).
+2. One owner per defect — state in a Dedupe line which pass reports overlaps.
+3. Fixes follow the kernel's Fix Validation unchanged; passes never define their own validation or evidence labels.
 
 ## Worked example
 
-Adding accessibility coverage:
+`passes/pass-24-agent-systems.md` + `packs/agent.md` (v0.7.0) were added through exactly these seams: one pass file, one pack file, one Routing Table row.
 
-1. `passes/pass-NN-accessibility.md` — triggers: "a user-facing interface is under review"; depends_on: `pass-10-ux`.
-2. Add to `packs/ux.md` run order after Pass 10.
-3. Done — the next UX review attacks contrast ratios, focus order, screen-reader semantics, and touch targets without any kernel edit.
-
-To verify registration: run a critique on a UI submission and confirm the Executive Assessment's coverage disclosure lists the new pass.
-
-For real worked examples, read `passes/pass-19-idempotency-integrity.md` with `packs/code.md` (v0.5.0) and `passes/pass-21-codebase-survey.md` with `packs/codebase.md` (v0.6.0) — both added through exactly this seam.
+Verify registration: run a critique on a matching artifact and confirm Coverage lists the new pass as run.
