@@ -2,6 +2,47 @@
 
 All notable changes to the `critique` skill. Format: semver; breaking changes bump the minor until 1.0.
 
+## 0.7.0
+
+Generalized, hardened, and rebuilt on zero-tech-debt principles. Breaking: pass frontmatter, pack format, evidence labels, and output sections changed.
+
+### Added
+
+- **Zero-tech-debt core** — the current implementation is evidence, not authority; reviews design toward the end state, not its history. New **Shape Change** output (Deleted / Unified / Renamed / Left alone / Deferred / Net concepts) and Self-Gate check that concepts net down.
+- **Workaround Ledger** — exhaustive workaround hunt (markers plus structural shapes: catch-and-continue, sleep/poll, reconciliation jobs, one-caller branches, manual runbook steps); every entry gets a root-cause replacement.
+- **Enhancements** section — every material improvement found, ranked by impact / engineering cost, nothing dropped for length.
+- **Replacement Implementation** on by default for code: runnable root-cause code for every P0–P2 finding and ledger entry, fixed at the shared point all callers route through; continues across responses instead of truncating.
+- Passes: 22 State Model & Invariants, 23 Resource Bounds & Backpressure, 24 Agent & LLM Systems, 25 Tech Debt & Historical Leakage.
+- Packs: `agent`, `full` (replaces the pack-less "all passes" route).
+- **Degradation** table — defined fallback for missing inputs, context overflow, missing lookup tools, failed lookups, no execution, underdetermined fixes. The review never stalls.
+- Reviewer Disciplines (was Senior Engineering Mindset): reframe + end state, root-cause grouping, delete-before-add; each checked by the Self-Gate.
+- Priority order for breaking ties between fixes (correctness → simplicity → invariants → … → cost).
+- CONTAINMENT and MIGRATION STEP labels: permitted interim states, each paired with a permanent fix and removal criterion (fixes the old rule forbidding containment of an in-production P0).
+- `scripts/check.py` — wiring check (ids, phases, pack membership, routing, description cap, stale terms, dangling Pass references).
+- Passes 01–07, 09, 11–16 enriched: first-principles reframe, timeout-before/after and slow-dependency failure cases, retry budgets, optimization ladder and benchmark discipline, property/fuzz/mutation testing, DX, dependency licensing and supply chain.
+
+### Changed
+
+- **One ordering authority:** `depends_on` removed; order is `phase` (frame → attack → synthesize) then pass number. The old pack orders contradicted `depends_on` (codebase pack ran 17 before 14 and 16 before 15/13).
+- **One selection rule:** a pass runs iff it is in a selected pack and its triggers match. Packs are membership lists; "add when applicable" lists removed.
+- Evidence labels: VERIFIED / INFERRED / ASSUMED / HYPOTHETICAL. Fix label: UNVALIDATED. Coverage label: NOT COVERED. Removes the UNVERIFIED collision between evidence and fix validation.
+- Fix Validation is tool-agnostic (docs lookup → web search → page fetch, native tools allowed); budget is 3 attempts per claim total, one per source. Fixes the old retry-per-source vs ceiling contradiction and the dual UNVERIFIED / VALIDATION_UNAVAILABLE labels.
+- One output spine across Triage / Full / Code; Coverage section in every tier (absorbs the codebase Coverage Ledger and SCOPE_EXCEEDED). Remediation ranked by impact / cost with explicit prerequisite marks. Finding Format gains **Fix cost**.
+- Input Contract: missing stage/constraints/focus never blocks; inferred and labeled ASSUMED.
+- Bulletproof Gate → Production Gate (adds Concurrency and Resources). Fake-Safety → False-Assurance Detector (adds async, tests-pass, microservices, prompt-as-access-control).
+- Description rewritten (793 chars).
+- Severity stays P0–P3 plus non-severity Opportunities (in Enhancements); the pasted BLOCKER…OPPORTUNITY scale was not adopted to avoid a second severity vocabulary.
+
+### Removed
+
+- `on_scope` / `on_gate` hooks (never wired into the kernel).
+- Final Challenge (folded into the Self-Gate adversarial second pass).
+- Hard Rule 3's inline attack list (Pass 16 owns it).
+
+### Migration from 0.6.0
+
+Custom passes: replace `depends_on:` with `phase:` and add the pass number to the relevant packs and `packs/full.md`. Custom packs: convert the run-order list to one `## Passes` line of `NN name` entries and add a Routing Table row. Run `python3 scripts/check.py`.
+
 ## 0.6.0
 
 Whole-codebase mode, senior-mindset enforcement, and leverage-ranked output.
@@ -72,4 +113,4 @@ Behavior-preserving: all 16 passes' attack lists moved verbatim into `passes/`. 
 
 Baseline as audited (single-file skill, 16 inline passes).
 
-**UNVERIFIED — validate before implementation:** the Agent Skills frontmatter description length cap (believed 1,024 chars) against the current agentskills.io spec; the v0.4.0 description targets ≤1,000 chars with margin regardless.
+Description cap validated 2026-09-26 against agentskills.io/specification: max 1024 characters.
