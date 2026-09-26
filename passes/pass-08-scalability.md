@@ -3,7 +3,7 @@ id: pass-08-scalability
 name: Scalability
 triggers:
   - growth, traffic, user counts, or large data volumes are claimed or implied
-depends_on: [pass-06-data-model]
+phase: attack
 ---
 
 ## Pass 8 — Scalability

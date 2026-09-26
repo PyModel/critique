@@ -3,7 +3,7 @@ id: pass-19-idempotency-integrity
 name: Idempotency & State Integrity
 triggers:
   - the code performs writes, mutations, external API calls, or database operations
-depends_on: [pass-03-failure-semantics]
+phase: attack
 ---
 
 ## Pass 19 — Idempotency & State Integrity
@@ -34,4 +34,4 @@ Ask:
 
 If any answer is a corrupted or duplicated state, the mutation is not safe.
 
-Dedupe: what happens *when* failure occurs belongs to Pass 3; this pass owns whether retries, duplication, and partial failure corrupt state.
+Dedupe: what happens *when* failure occurs belongs to Pass 3; the design-level state model to Pass 22; this pass owns whether code-level retries, duplication, and partial failure corrupt state.

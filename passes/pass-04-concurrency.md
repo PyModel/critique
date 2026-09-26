@@ -1,38 +1,29 @@
 ---
 id: pass-04-concurrency
-name: Concurrency
+name: Concurrency (scenarios)
 triggers:
-  - multiple writers, workers, tabs, jobs, queues, webhooks, or duplicated requests appear in the submission or are implied by its scale claims
-depends_on: [pass-02-correctness]
+  - multiple writers, workers, tabs, jobs, queues, consumers, webhooks, or duplicated requests appear in the submission or are implied by its scale claims
+phase: attack
 ---
 
-## Pass 4 — Concurrency
+## Pass 4 — Concurrency (business scenarios)
 
 Look for:
 
-* check-then-write
-* double submission
-* duplicate workers
-* simultaneous updates
-* stale optimistic state
-* non-atomic counters
-* inventory oversell
-* double payments
-* duplicate emails
-* duplicated jobs
-* conflicting state transitions
-* multiple browser tabs
-* webhook/request races
+* check-then-write; double submission; duplicate consumers or workers
+* simultaneous updates; stale optimistic state; non-atomic counters
+* inventory oversell; double payments; duplicate emails or jobs
+* conflicting state transitions; multiple browser tabs
+* webhook/request races; cancellation and shutdown races; stale writers after failover
 
-Require explicit answers for:
+For every shared mutable resource ask:
 
-* locking
-* uniqueness
-* compare-and-swap
-* transaction isolation
-* idempotency keys
-* conflict resolution
+* Who owns it, and who may modify it?
+* What synchronizes access?
+* Can single ownership replace synchronization?
+* Can immutable data replace shared mutation?
+* Can moving the transaction boundary delete the race entirely?
 
-where relevant.
+Require explicit answers — locking, uniqueness constraints, compare-and-swap, isolation level, idempotency keys, fencing, conflict resolution — where relevant.
 
-Note: report a concurrency defect once — either here or in Pass 2, never in both.
+Dedupe: this pass owns the scenario; Pass 18 owns the code mechanism. Report each defect once.

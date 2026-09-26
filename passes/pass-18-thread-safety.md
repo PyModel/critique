@@ -3,7 +3,7 @@ id: pass-18-thread-safety
 name: Concurrency & Thread Safety (code)
 triggers:
   - the code shares state across threads, tasks, goroutines, or requests; uses locks, atomics, channels, or async/await; or spawns background work
-depends_on: [pass-02-correctness]
+phase: attack
 ---
 
 ## Pass 18 — Concurrency & Thread Safety (code level)

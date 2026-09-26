@@ -3,7 +3,7 @@ id: pass-17-code-architecture
 name: Code Architecture (SOLID / DRY / YAGNI)
 triggers:
   - the submission is source code
-depends_on: [pass-14-maintainability]
+phase: attack
 ---
 
 ## Pass 17 — Code Architecture (SOLID / DRY / YAGNI)
@@ -42,4 +42,4 @@ Ask:
 
 If the answer is a scatter of files, the module boundaries are wrong.
 
-Dedupe: design-level abstraction tax reports under the kernel's Fake Design output section; this pass reports the code-level instances and line evidence.
+Dedupe: design-level abstraction tax belongs to Pass 16; this pass reports code-level instances with line evidence.

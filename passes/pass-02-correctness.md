@@ -3,39 +3,31 @@ id: pass-02-correctness
 name: Correctness
 triggers:
   - always
-depends_on: [pass-01-assumptions]
+phase: attack
 ---
 
 ## Pass 2 — Correctness
 
 Attack:
 
-* invalid states
-* missing invariants
-* race conditions
-* lost updates
-* duplicate processing
-* ordering assumptions
-* incorrect transaction boundaries
-* TOCTOU bugs
-* partial writes
-* inconsistent reads
-* stale state
-* retry behavior
-* non-idempotent operations
-* unsafe state transitions
-* integer/float mistakes
-* timezone problems
-* truncation
-* overflow
-* pagination correctness
-* deletion semantics
-* mutable historical records
+* invalid or contradictory states; missing invariants
+* lost, duplicate, or partial updates; ambiguous commits
+* stale, inconsistent, non-repeatable, or phantom reads; write skew
+* incorrect transaction boundaries; TOCTOU
+* ordering and uniqueness assumptions; eventual-consistency assumptions
+* empty, null, malformed, minimum, and maximum inputs; off-by-one
+* integer overflow, float precision, truncation
+* encoding and Unicode edge cases
+* timezones, clock skew, leap time
+* schema or serialization mismatches between producer and consumer
+* pagination correctness; deletion semantics; mutable historical records
+
+Trace the actual consequence of each — never list the possibility alone.
 
 Ask:
 
 > Can the system represent a state that should be impossible?
 
-If yes, explain how it gets there.
+If yes, show the path that reaches it.
 
-Note: race conditions, lost updates, and duplicate processing identified here are analyzed in depth by Pass 4 (Concurrency). Do not report the same defect twice — report it once, in the pass that explains it best.
+Dedupe: a concurrency defect is reported once — business scenario in Pass 4 (designs) or mechanism in Pass 18 (code) when those passes run; here otherwise.

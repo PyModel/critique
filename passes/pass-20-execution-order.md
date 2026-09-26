@@ -3,7 +3,7 @@ id: pass-20-execution-order
 name: Execution Order & Error Handling
 triggers:
   - the submission is source code
-depends_on: [pass-02-correctness]
+phase: attack
 ---
 
 ## Pass 20 — Execution Order & Error Handling

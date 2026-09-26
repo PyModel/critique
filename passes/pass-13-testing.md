@@ -3,51 +3,34 @@ id: pass-13-testing
 name: Testing
 triggers:
   - always
-depends_on: [pass-02-correctness]
+phase: attack
 ---
 
 ## Pass 13 — Testing
 
-Reject vague claims such as "add tests."
+Tests passing proves only what they assert. Ask what they fail to test.
 
-Specify required categories:
+Attack existing suites for:
 
-### Unit
+* tests coupled to implementation, or that only exercise mocks
+* assertions that cannot fail; happy-path-only coverage
+* shared state between tests; timing-dependent flakiness
+* no test ever crossing a real boundary (database, queue, network)
+* benchmarks on unrepresentative workloads
 
-Pure domain invariants.
+For each critical finding, state the test that proves the fix — choosing from:
 
-### Integration
+* **Unit** — pure domain invariants
+* **Property-based / fuzz** — invariants over generated or hostile input
+* **Integration** — real database, queue, cache, filesystem, external boundary
+* **Contract / compatibility** — API schemas across versions
+* **Concurrency** — deterministic interleavings of conflicting operations
+* **Failure injection** — timeouts, crashes mid-operation, duplicate delivery, slow dependencies
+* **Migration / rollback** — forward, compatibility window, rollback
+* **Security** — authorization boundaries, abuse cases
+* **Load / stress / soak** — critical path under representative and overload workload
+* **Mutation testing** — where suite strength itself is in doubt
 
-Database, queue, cache, filesystem, or external boundary behavior.
+Every discovered bug gets a regression test reproducing its actual mechanism.
 
-### Contract
-
-API compatibility and schemas.
-
-### Concurrency
-
-Simultaneous conflicting operations.
-
-### Failure injection
-
-Timeouts, retries, crashes, duplicate delivery, dependency outages.
-
-### Migration
-
-Forward migration, compatibility window, rollback behavior.
-
-### E2E
-
-Critical user workflows.
-
-### Security
-
-Authorization boundaries and abuse cases.
-
-### Performance
-
-Critical path under representative workload.
-
-For each critical finding, state the test that would prove the fix.
-
-(This pass defines **what to prove**. The Remediation Plan's Tests field plans **when**; the Bulletproof Gate checks **whether it was proven**. Do not restate the same test list in all three.)
+(This pass defines **what to prove**. Remediation plans **when**; the Production Gate checks **whether it was proven**. Do not restate the list in all three.)

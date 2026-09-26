@@ -2,32 +2,24 @@
 id: pass-12-observability
 name: Observability
 triggers:
-  - production operation is claimed, or logging/metrics/alerting are mentioned
-depends_on: [pass-11-operations]
+  - production operation is claimed, or logging/metrics/tracing/alerting are mentioned
+phase: attack
 ---
 
 ## Pass 12 — Observability
 
-Ask whether an operator can determine:
-
-1. something is broken,
-2. which component is responsible,
-3. which users are affected,
-4. why it happened,
-5. whether the fix worked.
+Can an operator determine, during failure: what happened, where, why, for whom, how often, how severe, and what changed — and whether the fix worked?
 
 Inspect:
 
-* structured logs
-* request IDs
-* trace IDs
-* tenant identifiers
-* latency histograms
-* queue depth
-* retries
-* error classification
-* domain metrics
-* saturation metrics
-* audit trails
+* structured logs with request and correlation IDs; traces across boundaries
+* error categories; latency histograms; queue depth; saturation; retry counts
+* dependency health; state-transition visibility; audit trails where required
+* SLOs tied to user-visible behavior
 
-Flag logging that produces lots of text but little diagnostic value.
+Flag:
+
+* logging that produces volume without diagnostic value; duplicate telemetry
+* high-cardinality metric explosions; secrets or PII in logs
+* logs used as the only correctness mechanism
+* telemetry that a proposed deletion would silently remove

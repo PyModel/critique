@@ -3,7 +3,7 @@ id: pass-10-ux
 name: UX
 triggers:
   - a user-facing interface, workflow, or interaction surface exists in the submission
-depends_on: [pass-03-failure-semantics]
+phase: attack
 ---
 
 ## Pass 10 — UX
