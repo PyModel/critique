@@ -2,6 +2,42 @@
 
 All notable changes to the `critique` skill. Format: semver; breaking changes bump the minor until 1.0.
 
+## 0.8.0
+
+Harder, reproducible, and self-checking. Breaking: Finding Format gains a `Repro` field and an S/M/L cost scale; pack memberships widened.
+
+### Added
+
+- **Hard Rule 7 — Reproduce, then run.** When the session can execute the artifact, every P0/P1 on code is reproduced (failing test or command with recorded output) before it is reported; one that could have been and was not is INFERRED. Replacement code runs through the project's own checks in a scratch copy or throwaway worktree (never the user's tree without permission), cited as `Ran: <command> — <result>`; unrun code carries `UNVALIDATED — not executed`. P0/P1 replacements ship with the regression test that fails before and passes after. Cost is bounded: the checks covering the changed paths per replacement, the full suite at most once; a read-only request or checks that cannot finish in session execute nothing and say so in Coverage.
+- Finding Format: **Repro** field; **Fix cost** on an S/M/L scale (S one owner/one module; M crosses modules or changes data/contract with compatible rollout; L changes ownership or needs a migration window). Remediation ranks by it.
+- Production Gate renders as a table: dimension · evidence · proven/unproven/n-a.
+- Self-Gate checks 1 and 12 now cover Hard Rule 7 (Repro present; replacement states whether it ran), and an **Independent check**: when the session has a second judge (verification tool, review model, subagent), P0/P1 evidence and executed replacements go to it; contradictions downgrade or rework. Outcome recorded in Coverage.
+- Reviewer Disciplines 8 **Steelman before you strike** (a finding or deletion stands only when the best reason for the current structure is refuted or outweighed) and 9 **Two candidates minimum** (every structural fix or enhancement names the strongest alternative and the deciding property); Self-Gate check 14 enforces both. Better Architecture states the rejected alternative.
+- **Enhancements format**: every attack pass yields the enhancements that would make its domain strongest, defect or not; the section groups them by ten dimensions (delete · invariant · ownership & data model · boundaries & calls · failure semantics · performance & cost · security · operability & observability · testing · DX) as `E<n>` entries with why-superior · gain · S/M/L cost · alternative beaten; P3-weight entries in one table.
+- Input Contract: `/critique` with no artifact in an open workspace reviews the workspace (codebase pack, ASSUMED) instead of emitting NO_ARTIFACT.
+- False-Assurance: "it's idempotent", "we hold a lock", "it's logged".
+- Severity anchor: reachability sets severity (unbounded buffer: P1 public, P2 internal cron); severity follows consequence, never discovery effort.
+- Pass 1: plans and specs — checkable done conditions, dependency-forced order, rollback per irreversible step, stated non-goals.
+- Pass 5: per-object authorization and tenant predicates; cryptographic misuse; a security finding names attacker, control, and gain.
+- Pass 8: every finding names the growth axis, the first saturating resource, and the load multiple (or the measurement).
+- Pass 10 rebuilt around a mechanism (what the user sees → what the system did → mid-flow failure → recovery) and owns the loading/empty/error/retry/partial/denied/offline/stale states the Production Gate demands.
+- Pass 13: a regression test is shown failing on the unfixed code first.
+- Pass 2 money/quantity arithmetic; Pass 15 lock files, integrity, unowned dependencies.
+- `scripts/check.py` invariants: `always` passes in every pack; pack entry slug == pass filename slug; every pass in ≥1 specialized pack; `metadata.version` == CHANGELOG head; `name:` present; pass references resolve across "Passes 14 and 16", "17–20", and "(9, 17–20, 22, 23)" forms (previously silently unchecked).
+- GitHub Actions workflow running the check on every push and PR. `.gitignore` for harness session files.
+
+### Changed
+
+- Lifecycle steps Frame / Attack / Synthesize select by `phase` only; the hardcoded 01/21/16 lists are gone, so adding a frame or synthesize pass is a pass-file change, as `HOW_TO_EXTEND.md` already claimed.
+- Pass 21 is the single owner of the Tier A/B/C code-pass set; the duplicate list in `packs/codebase.md` is removed.
+- Packs widened where exclusion was a coverage hole: `code` += 07 10 11 12 15; `codebase` += 07 10; `api` += 12 24; `agent` += 06 10 14 (+ note: agent code also routes to `code`); `ux` += 23.
+- Code rules: completion is same-turn (the agent cannot self-prompt a follow-up response); only an output limit stops replacement, and the remainder is NOT COVERED.
+- Style states the positive target (every sentence names a defect, mechanism, number, or fix) instead of listing banned hedges.
+
+### Migration from 0.7.0
+
+Custom findings templates add `Repro` and the S/M/L cost. Custom packs: entries must read `NN slug` with the slug equal to the pass filename after `pass-NN-`, and must include every `always` pass. Run `python3 scripts/check.py`.
+
 ## 0.7.0
 
 Generalized, hardened, and rebuilt on zero-tech-debt principles. Breaking: pass frontmatter, pack format, evidence labels, and output sections changed.

@@ -6,11 +6,11 @@ Membership only. A listed pass runs iff its triggers match; order is fixed by th
 
 ## Passes
 
-01 assumptions · 21 codebase-survey · 02 correctness · 03 failure-semantics · 04 concurrency · 05 security · 06 data-model · 08 scalability · 09 performance · 11 operations · 12 observability · 13 testing · 14 maintainability · 15 dependency-risk · 16 simplicity · 17 code-architecture · 18 thread-safety · 19 idempotency-integrity · 20 execution-order · 22 state-invariants · 23 resource-bounds · 24 agent-systems · 25 tech-debt
+01 assumptions · 21 codebase-survey · 02 correctness · 03 failure-semantics · 04 concurrency · 05 security · 06 data-model · 07 api-contract · 08 scalability · 09 performance · 10 ux · 11 operations · 12 observability · 13 testing · 14 maintainability · 15 dependency-risk · 16 simplicity · 17 code-architecture · 18 thread-safety · 19 idempotency-integrity · 20 execution-order · 22 state-invariants · 23 resource-bounds · 24 agent-systems · 25 tech-debt
 
 ## Notes
 
-- Pass 21 stratifies: code passes (9, 17–20, 22, 23) at full rigor on Tier A only; Tier B pattern-sampled; Tier C gets 14, 16, 25 at architecture level. The Tier ledger goes in Coverage.
+- Pass 21 owns stratification: Tier A at full rigor, Tier B pattern-sampled, Tier C structural. The Tier ledger goes in Coverage.
 - Never propose a big-bang rewrite. Sequence by dependency and risk; one coherent end state per remediation step.
 - Measure before optimizing: every performance claim names its metric.
 - A small repo (a few screens of file list) may use Triage.

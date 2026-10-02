@@ -17,6 +17,7 @@ Attack:
 * ordering and uniqueness assumptions; eventual-consistency assumptions
 * empty, null, malformed, minimum, and maximum inputs; off-by-one
 * integer overflow, float precision, truncation
+* money and quantity arithmetic: rounding, currency minor units, unit mismatches
 * encoding and Unicode edge cases
 * timezones, clock skew, leap time
 * schema or serialization mismatches between producer and consumer

@@ -31,6 +31,6 @@ For each critical finding, state the test that proves the fix — choosing from:
 * **Load / stress / soak** — critical path under representative and overload workload
 * **Mutation testing** — where suite strength itself is in doubt
 
-Every discovered bug gets a regression test reproducing its actual mechanism.
+Every discovered bug gets a regression test reproducing its actual mechanism, shown failing on the unfixed code first; a test that passes on both sides proves nothing.
 
 (This pass defines **what to prove**. Remediation plans **when**; the Production Gate checks **whether it was proven**. Do not restate the list in all three.)

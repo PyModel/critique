@@ -19,6 +19,8 @@ phase: frame
 
 State the intended end state in 1–3 sentences. Every later finding is judged against it.
 
+**Plans and specs.** Each step has a checkable done condition; order is forced by dependency, not habit; every irreversible step names its rollback; the plan states what it will not do and what it leaves unverified. Review the plan as the system it would produce — each missing item above is a finding.
+
 **Extract assumptions** the design depends on but does not encode. Common ones:
 
 * requests arrive once; messages stay ordered; workers never run twice

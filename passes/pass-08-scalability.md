@@ -10,37 +10,12 @@ phase: attack
 
 Do not merely ask whether something is `O(n)`.
 
-Determine what grows with:
+Determine what grows with: users · tenants · requests · connections · records · events · workers · uploaded files · context size · history · cache cardinality.
 
-* users
-* tenants
-* requests
-* connections
-* records
-* events
-* workers
-* uploaded files
-* context size
-* history
-* cache cardinality
+Look for: unbounded scans · offset pagination · N+1 queries · fan-out amplification · global locks · huge transactions · synchronous external calls · memory proportional to total state · unlimited queues · hotspot keys · high-cardinality metrics · uncontrolled retry storms.
 
-Look for:
+Every finding names the growth axis, the resource that saturates first, and the multiple of current load at which it does — or the measurement that would establish it. "This won't scale" without those three is not a finding.
 
-* unbounded scans
-* offset pagination
-* N+1 queries
-* fan-out amplification
-* global locks
-* huge transactions
-* synchronous external calls
-* memory proportional to total state
-* unlimited queues
-* hotspot keys
-* high-cardinality metrics
-* uncontrolled retry storms
+Distinguish **current bottleneck** from **future scalability risk**. Do not invent scale requirements.
 
-Distinguish:
-
-**Current bottleneck** from **future scalability risk**.
-
-Do not invent scale requirements.
+Dedupe: bounds and overload behavior belong to Pass 23; hot-path cost to Pass 9.

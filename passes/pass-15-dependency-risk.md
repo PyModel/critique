@@ -15,6 +15,7 @@ Examine:
 * why it exists; what functionality is actually used
 * maintenance status; ecosystem health; security history; transitive dependencies
 * API stability; upgrade path; version pinning; supply-chain verification
+* pinned and lock-filed with integrity verification; a dependency nobody on the team owns is an incident waiting for an owner
 * outage and slowness behavior; rate limits; pricing sensitivity
 * binary size; startup cost; runtime overhead
 * licensing; platform support; data portability; lock-in and replacement difficulty

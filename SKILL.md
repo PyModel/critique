@@ -2,7 +2,7 @@
 name: critique
 description: "Adversarial principal-level review of any engineered system: architecture, services, infrastructure, APIs, data models, UX flows, specs, implementation plans, agent/LLM systems, source code, and whole codebases. Attacks assumptions, invariants, state ownership, failure and concurrency semantics, security, resource bounds, performance, and operability; hunts every workaround and enhancement; ranks findings P0-P3 with evidence labels; applies zero-tech-debt design; then delivers the strongest simple architecture, root-cause production replacement code, and a leverage-ranked remediation plan. Use when asked to critique, review, attack, stress-test, audit, harden, or level up a design, plan, codebase, or code. Routine code-diff or PR review: use code-review. Prose editing: out of scope."
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Adversarial Principal Reviewer
@@ -23,7 +23,7 @@ Optimize recommendations in this order unless the artifact's requirements justif
 
 # Input Contract
 
-1. **Artifact** — the thing under review. Absent or empty → output **NO_ARTIFACT — nothing to review** and stop.
+1. **Artifact** — the thing under review. None named but a workspace is open → the workspace is the artifact (codebase pack), recorded as ASSUMED. Nothing at all → output **NO_ARTIFACT — nothing to review** and stop.
 2. **Stage** — design-only, pre-production, or in-production.
 3. **Constraints** — scale, compliance, team, deadlines.
 4. **Focus** — what the user wants attacked hardest.
@@ -60,6 +60,7 @@ Coverage label: **NOT COVERED — <what> — <why>** for anything the review did
    * **MIGRATION STEP** — a transitional state inside an expand/contract or strangler migration.
    Robust fix too large? Scope it honestly. No robust fix derivable from the evidence? **BLOCKED ON DESIGN — <decision or evidence required>**.
 6. **"Best practice" is not evidence.** A practice is recommended only when its assumptions match this system, it removes a named risk or cost, and its complexity is justified. Popularity, familiarity, and "tests pass" prove nothing.
+7. **Reproduce, then run.** When the session can execute the artifact: a P0/P1 on code is reproduced before it is reported — failing test or command with recorded output — and that is its Evidence; one that could have been reproduced and was not is INFERRED, with the reason. Replacement code runs through the project's own checks in a scratch copy or throwaway worktree, never the user's working tree without permission — the checks covering the changed paths per replacement, the full suite at most once — cited `Ran: <command> — <result>`; unrun code carries `UNVALIDATED — not executed`. P0/P1 replacements ship with the regression test that fails before and passes after.
 
 ---
 
@@ -74,16 +75,18 @@ Each is checked by the Self-Gate.
 5. **Group by root cause.** Several symptoms from one cause are one finding with multiple evidence points and one fix.
 6. **Delete before adding.** Prefer the fix that removes code, state, a boundary, or a failure class. Prefer invalid states unrepresentable over detected; ownership over synchronization; invariants over conventions. Every rule (permission, validation, retry, state derivation) lives in exactly one place. A fix that adds more concepts than it removes must justify the net addition.
 7. **Own the outcome.** Would you sign off on the fix if you were paged for it at 3am and paid its cloud bill?
+8. **Steelman before you strike.** State the best reason the current structure exists; a finding or deletion stands only when that reason is refuted or outweighed.
+9. **Two candidates minimum.** Every structural fix or enhancement names the strongest alternative and the property, in the priority order, on which the chosen design beats it.
 
 ---
 
 # Review Lifecycle
 
-1. **Scope** — Input Contract; select pack(s) from the Routing Table; select tier.
-2. **Frame** — run the `phase: frame` passes: Pass 01 always, Pass 21 for codebases.
-3. **Attack** — run the `phase: attack` passes of the selected pack(s) whose triggers match, in ascending pass number.
+1. **Scope** — Input Contract; route to pack(s) from the Routing Table; select tier.
+2. **Frame** — run the selected `phase: frame` passes.
+3. **Attack** — run the selected `phase: attack` passes; each yields its findings and the enhancements that would make its domain strongest, defect or not.
 4. **Detect** — run the Workaround and False-Assurance detectors across the artifact.
-5. **Synthesize** — run Pass 16 (Simplicity) last: judge which complexity survives the requirements the other passes mapped.
+5. **Synthesize** — run the selected `phase: synthesize` passes: judge which complexity survives the requirements the other passes mapped.
 6. **Design** — Workaround Ledger, Enhancements, Better Architecture, Replacement Implementation, Shape Change, and leverage-ranked Remediation, grouped by root cause.
 7. **Validate fixes** — Fix Validation for every fix that depends on external tooling or practice.
 8. **Gate** — Production Gate against the stage.
@@ -91,7 +94,7 @@ Each is checked by the Self-Gate.
 
 ## Pass selection
 
-A pass runs **iff** it is listed in a selected pack **and** its triggers match the artifact. Unlisted passes never run. Multiple packs may be selected; take the union. Order is fixed by `phase` (frame → attack → synthesize) then pass number — packs define membership, never order. Pack entry `NN` resolves to `passes/pass-NN-*.md`.
+A pass is **selected** iff it is listed in a routed pack **and** its triggers match the artifact. Unlisted passes never run. An artifact spanning domains routes to every matching pack; take the union. Order is fixed by `phase` (frame → attack → synthesize) then pass number — packs define membership, never order. Pack entry `NN` resolves to `passes/pass-NN-*.md`.
 
 Check triggers from each member pass's frontmatter (first ~10 lines) and load the full body only for passes that match. Skipped passes are listed in Coverage.
 
@@ -115,10 +118,6 @@ A new pack needs one new row here — nothing else in this file.
 * **Full** — designs, plans, specs, architectures, codebases.
 * **Code** — source code (file, module, snippet).
 
-Whenever the artifact contains code, in any tier, the Replacement Implementation is **included by default** (Triage: P0–P1 only). Omit it only when the user asks for an audit without code.
-
-State the tier and the pack(s) in the output.
-
 ---
 
 # Degradation
@@ -128,10 +127,11 @@ The review never stalls. Every constraint has a defined fallback, and every fall
 | Condition | Behavior |
 |---|---|
 | Missing stage/constraints/focus | Infer, label **ASSUMED**, continue |
-| Artifact exceeds context | Frame first (Pass 01/21), review highest-risk parts at full rigor, list the rest as **NOT COVERED** |
+| Artifact exceeds context | Frame first (`phase: frame`), review highest-risk parts at full rigor, list the rest as **NOT COVERED** |
 | No live-lookup tools available | Fixes needing validation carry **UNVALIDATED**; internal fixes are unaffected |
 | Lookup fails or times out | Per Fix Validation attempt budget, then **UNVALIDATED** |
-| Cannot run code or benchmarks | Name the exact command and metric; label performance claims **HYPOTHETICAL** |
+| Cannot run code, user asks for read-only, or the checks cannot finish in session | Nothing executes. Trace the path by `file:line`; name the command; replacements `UNVALIDATED — not executed` |
+| Cannot benchmark | Name the metric and method; performance claims **HYPOTHETICAL** |
 | Robust fix underdetermined | **BLOCKED ON DESIGN — <what decides it>** |
 
 ---
@@ -161,6 +161,9 @@ Attack protections that sound safe but are not:
 * "Tests pass" — only for what they assert; mocks prove the mock.
 * "It's microservices" — network boundaries are not modularity.
 * "The model/agent will follow the instructions" — prompts are not access control.
+* "It's idempotent" — only if the key is stored with its result under a uniqueness constraint.
+* "We hold a lock" — only if every writer takes it and it survives the holder dying.
+* "It's logged" — a log is neither an alert nor a recovery.
 
 ---
 
@@ -198,7 +201,7 @@ If a live source contradicts the proposed fix, change the fix.
 
 **Opportunities** (no defect, but a meaningful chance to delete, simplify, harden, or cut cost) go to Enhancements, never into P-levels.
 
-Calibration: a missing idempotency key on a payment endpoint that double-charges on retry is P1 (refundable, detectable); the same flaw on an irreversible payout is P0; a missing index slowing an internal admin page is P3. Never inflate.
+Calibration: a missing idempotency key on a payment endpoint that double-charges on retry is P1 (refundable, detectable); the same flaw on an irreversible payout is P0; an unbounded buffer on a public endpoint is P1 (denial of service) and P2 on an internal cron; a missing index slowing an internal admin page is P3. Severity follows reachable consequence, never discovery effort. Never inflate.
 
 ---
 
@@ -207,11 +210,12 @@ Calibration: a missing idempotency key on a payment endpoint that double-charges
 ### `[P#] <name>` · <evidence label>
 
 * **Evidence** — quote or locate it (`file:line`, spec section, diagram edge).
+* **Repro** — the input, command, or test that triggers it (Hard Rule 7; required for P0/P1 on runnable code).
 * **Mechanism** — input → state → failure.
 * **Impact** — what users, data, or operators actually experience.
 * **Root cause** — the design decision that permits it.
 * **Fix** — the permanent correction (plus CONTAINMENT if in-production P0/P1).
-* **Fix cost** — complexity, performance, migration risk, new failure modes.
+* **Fix cost** — engineering cost as **S** (one owner, one module, no data or contract change), **M** (crosses modules, or changes data or a contract with a compatible rollout), or **L** (changes ownership, or needs a migration with a compatibility window) — plus the specific complexity, performance, migration risk, and new failure modes.
 * **Verification** — the test, metric, or experiment that proves it.
 * **Validated via** / **UNVALIDATED** — only when the fix touches external tooling or practice.
 
@@ -230,13 +234,21 @@ Render the sections the tier includes, in this order. One spine for every tier.
 | 3 | **Findings** — P0, P1, P2 blocks; P3 table | P0–P1 | ✓ | ✓ |
 | 4 | **Workaround Ledger** — every workaround: location · classification · what it masks (root cause) · root-cause replacement · finding it maps to, if any | compact table: location · replacement | ✓ | ✓ |
 | 5 | **Abstraction Tax** — layer → claimed purpose → actual value → cost → keep/delete/simplify | | ✓ | ✓ |
-| 6 | **Enhancements** — every material improvement found across all passes that is not already in the Workaround Ledger or Abstraction Tax: deletions, stronger invariants, better ownership or data model, fewer boundaries/calls, batching, streaming, caching, lower cost, better DX and observability. Each: why it is superior · expected gain (metric) · cost. Ranked by impact / engineering cost; nothing omitted for length — P3-weight items go in a compact table | | ✓ | ✓ |
-| 7 | **Better Architecture** — boundaries, ownership, state model, invariants, persistence, concurrency, failure semantics, interfaces, operations; ASCII diagrams welcome; migration path without flag-day rewrite | | ✓ | when structural |
-| 8 | **Replacement Implementation** — production code for every P0–P2 finding, every workaround in the ledger, and every code-level enhancement recommended; see Code rules | P0–P1, when code | when code | ✓ |
+| 6 | **Enhancements** — every material improvement not already in the Workaround Ledger or Abstraction Tax, in the format below; nothing omitted for length | | ✓ | ✓ |
+| 7 | **Better Architecture** — boundaries, ownership, state model, invariants, persistence, concurrency, failure semantics, interfaces, operations; the rejected alternative and the deciding property; ASCII diagrams welcome; migration path without flag-day rewrite | | ✓ | when structural |
+| 8 | **Replacement Implementation** — production code for every P0–P2 finding, every workaround in the ledger, and every code-level enhancement recommended; see Code rules; omitted only when the user asks for an audit without code | P0–P1, when code | when code | ✓ |
 | 9 | **Shape Change** — the architectural delta the recommendations produce, in counts not lists (see below) | | ✓ | ✓ |
-| 10 | **Remediation** — ranked by impact / engineering cost; each step: problem solved · change · fix cost · verification · migration & rollback. A step whose dependency forces it earlier is marked `(prerequisite of #n)`. Deletion steps and addition steps are separate steps. One coherent end state per step; split large work along ownership boundaries, never file counts | top 3 | ✓ | ✓ |
+| 10 | **Remediation** — ranked by impact / engineering cost (S/M/L from Finding Format); each step: problem solved · change · fix cost · verification · migration & rollback. A step whose dependency forces it earlier is marked `(prerequisite of #n)`. Deletion steps and addition steps are separate steps. One coherent end state per step; split large work along ownership boundaries, never file counts | top 3 | ✓ | ✓ |
 | 11 | **Production Gate** | | ✓ | ✓ |
-| 12 | **Coverage** — tier, packs, passes run and skipped, ASSUMED inputs, NOT COVERED items, UNVALIDATED count, **residual risks of the proposed design** (what survived the Self-Gate attack); for codebases the Tier A/B/C ledger (Pass 21) | ✓ | ✓ | ✓ |
+| 12 | **Coverage** — tier, packs, passes run and skipped, ASSUMED inputs, NOT COVERED items, UNVALIDATED count, independent-check outcome, **residual risks of the proposed design** (what survived the Self-Gate attack); for codebases the Tier A/B/C ledger (Pass 21) | ✓ | ✓ | ✓ |
+
+## Enhancements (section 6)
+
+Group by dimension — delete · invariant · ownership & data model · boundaries & calls · failure semantics · performance & cost · security · operability & observability · testing · DX — and rank by impact / engineering cost within each. Each entry:
+
+`E<n> <name>` · dimension · source pass — why superior · gain (metric, or the measurement that would show it) · cost (S/M/L) · alternative beaten and on what property
+
+P3-weight entries render as one table: E# | dimension | enhancement | gain | cost.
 
 ## Shape Change (section 9)
 
@@ -258,11 +270,11 @@ If Net does not go down, the Verdict states why the added complexity is required
 * Root cause, not symptom: replace the mechanism that permits the defect, at the shared point every caller routes through — never a guard at one call site while siblings stay broken.
 * Complete, production-ready code in the artifact's language and idioms.
 * Preserve observable behavior unless a finding requires otherwise; mark each change inline `BEHAVIOR CHANGE:` in the language's comment syntax.
-* Order operations: validate → retrieve → decide → mutate → return (Pass 20).
+* Pass 20 order: validate → retrieve → decide → mutate → return.
 * Every performance change states its complexity delta, time and space.
 * Every added or changed library/API call goes through Fix Validation.
-* Real, runnable code: no pseudocode, no TODOs for essential behavior, no invented APIs, no placeholder bodies. Each replacement names the finding or ledger entry it resolves.
-* Too large for one response → replace in severity order (P0 first) and continue in follow-up responses until every P0–P2 finding and ledger entry has code; list anything still pending under Coverage as NOT COVERED. Never silently truncate.
+* Real, runnable code: no pseudocode, no TODOs for essential behavior, no invented APIs, no placeholder bodies. Each replacement names the finding or ledger entry it resolves and its `Ran:` line (Hard Rule 7).
+* Large → replace in severity order (P0 first) and keep going in the same turn until every P0–P2 finding and ledger entry has code; only an output limit stops it, and whatever remains is listed under Coverage as NOT COVERED. Never silently truncate.
 * Follow with **Trade-offs**: what changed, why, what each change costs.
 
 ## Production Gate
@@ -271,7 +283,7 @@ Declare production-ready only with evidence, matched to stage (design-stage dema
 
 Correctness (invariants encoded, state machine valid, idempotency proven) · Concurrency (ownership or synchronization defined, duplicate execution safe) · Security (server-side authz, tenant isolation tested, hostile input validated, secrets managed) · Reliability (retry budgets, deadlines, partial-failure and restart semantics, overload behavior) · Data (constraints, tested migrations and restore) · Resources (every growing resource bounded with backpressure) · Operations (health, rollback, runbooks) · Observability (can explain what/where/why/for whom) · Performance (representative benchmark, tail latency known) · UX (loading/error/empty/retry states, accessibility, irreversible actions protected) · Tests (integration, concurrency, failure injection, contract, critical E2E).
 
-Missing evidence → **Production readiness is unproven.** Never substitute confidence for evidence.
+Render as a table: dimension · evidence (`file:line`, test, metric, runbook) · **proven** / **unproven** / **n/a**. Any applicable dimension unproven → **Production readiness is unproven.** Never substitute confidence for evidence.
 
 ---
 
@@ -279,7 +291,7 @@ Missing evidence → **Production readiness is unproven.** Never substitute conf
 
 Attack your own review before submitting. Assume your recommendations are wrong.
 
-1. Every P0/P1 has evidence, mechanism, fix, fix cost, verification — or BLOCKED ON DESIGN.
+1. Every P0/P1 has evidence, Repro or the reason none was possible (Hard Rule 7), mechanism, fix, fix cost, verification — or BLOCKED ON DESIGN.
 2. Every claim carries an evidence label; none is promoted beyond its support.
 3. Every fix touching external tooling or practice is Validated or UNVALIDATED.
 4. No recommended fix is a workaround; every CONTAINMENT / MIGRATION STEP names its permanent fix and removal criterion.
@@ -289,9 +301,12 @@ Attack your own review before submitting. Assume your recommendations are wrong.
 8. The reframe question was asked: is this the right problem, and would a from-scratch design look different?
 9. For each recommended fix: What new state did it add? What can now race, duplicate, or partially fail? What grows without bound? Did it move complexity instead of removing it? Did it create a second source of truth? Could something simpler give the same guarantee?
 10. Shape Change nets fewer concepts, or the Verdict justifies the addition; no recommendation keeps a shim, alias, flag, or duplicate path without a removal criterion.
-11. Every workaround found is in the Workaround Ledger with a root-cause replacement; every material enhancement found is in Enhancements — none dropped for length.
-12. For code: every P0–P2 finding and ledger entry has runnable replacement code (or is listed NOT COVERED), and each replacement fixes the shared root, not one call site.
+11. Every workaround found is in the Workaround Ledger with a root-cause replacement; every pass contributed its enhancements to Enhancements — none dropped for length.
+12. For code: every P0–P2 finding and ledger entry has runnable replacement code (or is listed NOT COVERED), each fixes the shared root, not one call site, and each states whether it was run.
 13. Coverage discloses everything skipped, assumed, or unvalidated.
+14. Every structural fix or enhancement names the alternative it beat; every deletion names the reason the thing existed and why that reason no longer holds.
+
+**Independent check.** When the session provides a second judge (verification tool, review model, subagent), submit each P0/P1 with its evidence and each executed replacement with its results; a contradicted finding is downgraded or dropped, a contradicted fix reworked. Record judge and outcome in Coverage, or that none was available.
 
 Any check fails → revise, then re-run the gate.
 
@@ -299,7 +314,7 @@ Any check fails → revise, then re-run the gate.
 
 # Style
 
-Direct, technically precise, skeptical; terse where the issue is obvious, detailed where it is subtle.
+Direct, technically precise, skeptical; terse where the issue is obvious, detailed where it is subtle. Every sentence names a defect, a mechanism, a number, or a fix.
 
 > This transaction boundary is fake. The row commits before the email is sent, so a crash between them loses the email permanently; retrying the request sends it twice.
 

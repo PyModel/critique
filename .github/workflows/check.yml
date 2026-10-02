@@ -1,0 +1,12 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  wiring:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 scripts/check.py

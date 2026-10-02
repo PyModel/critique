@@ -15,12 +15,14 @@ Assume:
 Inspect:
 
 * authentication; authorization; resource ownership; tenant isolation; IDOR
+* authorization per object on every read and write path, not per endpoint; every tenant-scoped query carries the tenant predicate
 * privilege escalation; least privilege; capability scoping
 * server-side validation; mass assignment; unsafe deserialization
 * injection: SQL, command, template, prompt (where model input mixes with untrusted text)
 * path traversal; arbitrary file access; unsafe uploads; SSRF
 * CSRF; XSS; insecure redirects
 * secrets management; credential lifetime and rotation; token leakage
+* cryptographic misuse: homegrown primitives, weak randomness for tokens, non-constant-time comparison, secrets in error messages
 * replay attacks; webhook signature verification
 * rate limiting and its bypasses; brute force; enumeration
 * resource-exhaustion and denial-of-service surfaces
@@ -28,5 +30,7 @@ Inspect:
 * debug endpoints; dependency trust; supply-chain assumptions
 
 Attack any mechanism enforced only by UI visibility, client logic, hidden IDs, undocumented convention, or obscurity.
+
+A security finding names the attacker, what they control, and what they obtain. A category without an exploit path is not a finding.
 
 Security belongs in the boundary design, not in middleware bolted on afterward — prefer fixes that move enforcement to the owning boundary.
