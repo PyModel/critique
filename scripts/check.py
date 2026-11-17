@@ -10,7 +10,8 @@ Invariants (each failure message names the one it breaks):
   routing - every pack has a Routing Table row and every row has a pack
   kernel  - description double-quoted and <= 1024 chars; name lowercase-hyphenated;
             metadata.version == first CHANGELOG heading
-  docs    - no stale terms; every 'Pass N' / 'Passes N, M–K' reference resolves
+  docs    - no stale terms; every 'Pass N' / 'Passes N, M–K' and 'Hard Rule N' reference resolves
+  evals   - every case in evals/cases.csv has exactly one rubric section and a fixture directory
 """
 import re
 import sys
@@ -20,7 +21,9 @@ ROOT = Path(__file__).resolve().parent.parent
 PHASES = {"frame", "attack", "synthesize"}
 STALE = ["depends_on", "on_gate", "on_scope", "VALIDATION_UNAVAILABLE", "UNVERIFIED RISK",
          "Bulletproof", "Fake Design", "Final Challenge", "Fake-Safety"]
-PASS_REF = re.compile(r"(?i)\bpass(?:es)?\s*\(?\s*(\d{1,2}(?:(?:,\s*|\s+and\s+|\s*[–-]\s*|/)\d{1,2})*)")
+NUM_LIST = r"\s*\(?\s*(\d{1,2}(?:(?:,\s*|\s+and\s+|\s*[–-]\s*|/)\d{1,2})*)"
+PASS_REF = re.compile(r"(?i)\bpass(?:es)?" + NUM_LIST)
+RULE_REF = re.compile(r"(?i)\bhard rules?" + NUM_LIST)
 NUM_OR_RANGE = re.compile(r"(\d{1,2})(?:\s*[–-]\s*(\d{1,2}))?")
 
 
@@ -29,12 +32,10 @@ def frontmatter(text):
     return m.group(1) if m else None
 
 
-def referenced_passes(text):
-    for group in PASS_REF.findall(text):
+def referenced(pattern, text):
+    for group in pattern.findall(text):
         for a, b in NUM_OR_RANGE.findall(group):
-            lo, hi = int(a), int(b or a)
-            for n in range(lo, hi + 1):
-                yield f"{n:02d}"
+            yield from range(int(a), int(b or a) + 1)
 
 
 def main():
@@ -117,14 +118,32 @@ def main():
     for n in sorted(set(passes) - covered):
         err(f"pass {n} belongs to no specialized pack (only full)")
 
+    hard_rules = skill.split("\n# Hard Rules\n", 1)[-1].split("\n# ", 1)[0]
+    rule_count = len(re.findall(r"^\d+\. \*\*", hard_rules, re.M))
+
     docs = [ROOT / "SKILL.md", ROOT / "HOW_TO_EXTEND.md", *(ROOT / "passes").glob("*.md"), *packs.values()]
     for d in docs:
         text = d.read_text()
         for term in STALE:
             if term in text:
                 err(f"{d.relative_to(ROOT)}: stale term '{term}'")
-        for ref in sorted(set(referenced_passes(text)) - set(passes)):
-            err(f"{d.relative_to(ROOT)}: references missing Pass {int(ref)}")
+        for n in sorted(set(referenced(PASS_REF, text)) - {int(k) for k in passes}):
+            err(f"{d.relative_to(ROOT)}: references missing Pass {n}")
+        for n in sorted(n for n in set(referenced(RULE_REF, text)) if not 1 <= n <= rule_count):
+            err(f"{d.relative_to(ROOT)}: references missing Hard Rule {n}")
+
+    evals = ROOT / "evals"
+    case_file, rubric_file = evals / "cases.csv", evals / "behavior-rubric.md"
+    for f in (case_file, rubric_file):
+        if not f.is_file():
+            err(f"{f.relative_to(ROOT)}: missing")
+    cases = re.findall(r"^([a-z]+-\d+),", case_file.read_text(), re.M) if case_file.is_file() else []
+    rubric = re.findall(r"^## ([a-z]+-\d+)$", rubric_file.read_text(), re.M) if rubric_file.is_file() else []
+    if sorted(cases) != sorted(rubric) or len(set(cases)) != len(cases):
+        err(f"evals: cases.csv ids {sorted(cases)} != rubric sections {sorted(rubric)}")
+    for case in cases:
+        if not (evals / "fixtures" / case).is_dir():
+            err(f"evals/fixtures/{case}: fixture directory missing")
 
     for e in errors:
         print(f"FAIL {e}")
