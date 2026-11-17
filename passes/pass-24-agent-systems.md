@@ -14,13 +14,16 @@ Model output is untrusted, nondeterministic input. Design as if it lies sometime
 
 * prompt injection through retrieved documents, tool results, user content, or web pages
 * tool permissions broader than the task needs; no human confirmation on irreversible actions
+* approval not bound to the exact resolved action and arguments; authorization checked when the plan is made, not when the tool runs
+* a sub-agent given more authority, budget, or data than its task needs, or its report trusted as fact
+* writes to persistent memory or shared context unvalidated, so injected content steers later sessions
 * model output flowing into shell, SQL, file paths, URLs, or other models without validation
 * instructions used as access control ("the agent is told not to…")
 * secrets or private data placed in prompts, logs, or traces
 
 **Correctness under nondeterminism**
 
-* output parsed without a schema, or schema violations not handled
+* output parsed without a schema, or schema violations not handled; refused, truncated, and failed outcomes read as empty success
 * single-sample decisions where the cost of a wrong answer warrants verification
 * agent loops with no termination bound, step budget, or progress check
 * state kept only in the conversation instead of a durable store

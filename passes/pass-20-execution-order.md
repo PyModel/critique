@@ -30,7 +30,10 @@ Attack:
 * swallowed errors: empty catch blocks, discarded results, unchecked error returns
 * catch-all handlers converting programmer errors into silent fallbacks
 * errors stripped of context (no wrapping, no operation name, no identifiers)
-* cleanup not guaranteed on error paths (resources leak on early return)
+* cleanup not guaranteed on error paths (resources leak on early return); cleanup or `finally` that raises and masks the original error
+* the same failure logged at every layer it passes through instead of once, where it is handled
+* assertions — stripped from optimized builds — guarding validation, security, or integrity
+* sentinel values (`-1`, `""`, `0`, epoch) standing for absence and colliding with valid data
 * edge cases at boundaries: empty, single, max, unicode, null/nil/undefined, timezone, overflow
 
 Prefer guard clauses and early exits over nested conditional pyramids.

@@ -11,7 +11,7 @@ phase: attack
 Inspect:
 
 * explicit semantics; typed inputs and outputs; deterministic behavior
-* error taxonomy — can the caller tell retryable from permanent?
+* error taxonomy — can the caller tell retryable from permanent, committed from unknown, a policy limit from overload, absence from failure?
 * idempotency; retries; timeouts; deadlines; cancellation; long-running operations
 * versioning; backward and forward compatibility; enum evolution
 * pagination, filtering, sorting; partial updates; null semantics

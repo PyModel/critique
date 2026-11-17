@@ -15,6 +15,8 @@ Attack the safety of mutations.
 * side effects that duplicate on retry (charge, send, create) with no idempotency key, dedupe window, or natural idempotency
 * partial mutation then retry: does the second attempt double-apply or corrupt?
 * retry loops that treat permanent errors as transient and vice versa
+* an idempotency key not scoped to actor and operation, not bound to the request's content, checked-then-written instead of claimed atomically with the effect, or expiring before the retry window does
+* an outbox feeding a consumer that is not idempotent — the relay republishes after a crash between publish and mark-published
 
 **Transactional integrity**
 

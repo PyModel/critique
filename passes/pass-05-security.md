@@ -16,6 +16,8 @@ Inspect:
 
 * authentication; authorization; resource ownership; tenant isolation; IDOR
 * authorization per object on every read and write path, not per endpoint; every tenant-scoped query carries the tenant predicate
+* the same check on cache hits, retries, replays, fallbacks, background jobs, admin and recovery paths; tenant and scope derived from verified context, never from request fields
+* an entry point missing the authentication, authorization, validation, or limits its sibling entry points enforce
 * privilege escalation; least privilege; capability scoping
 * server-side validation; mass assignment; unsafe deserialization
 * injection: SQL, command, template, prompt (where model input mixes with untrusted text)

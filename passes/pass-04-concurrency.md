@@ -15,6 +15,7 @@ Look for:
 * inventory oversell; double payments; duplicate emails or jobs
 * conflicting state transitions; multiple browser tabs
 * webhook/request races; cancellation and shutdown races; stale writers after failover
+* a process-local lock or in-memory dedupe guarding state other processes or replicas also write; a lease whose stale holder can still write because the resource checks no fencing token
 
 For every shared mutable resource ask:
 

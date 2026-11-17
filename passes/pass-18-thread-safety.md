@@ -13,7 +13,7 @@ Attack mechanism-level concurrency defects.
 **Shared mutable state**
 
 * fields or collections written by concurrent paths without synchronization
-* check-then-act sequences on shared state (TOCTOU)
+* check-then-act sequences on shared state (TOCTOU) — in single-threaded async code every `await` or yield between the check and the act is such a gap
 * lazy initialization without a safe publication mechanism
 * visibility and reordering assumptions the language's memory model does not guarantee
 
