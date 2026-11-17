@@ -17,6 +17,9 @@ Reviewing a codebase is not reviewing a large file. Survey first, stratify, then
 * dependency graph: internal module boundaries and external dependencies (Pass 15 deep-dives the externals)
 * hot paths: highest-QPS, latency-critical, and throughput-critical routes
 * cross-cutting conventions: error handling, logging, config, retries — and where the convention silently breaks
+* change history, where available: churn (which files change most) and co-change (which change together) — evidence for Tier A and for hidden links (Pass 14)
+
+A codebase too large to hold in view is surveyed from its skeleton first — signatures and imports without bodies — so the whole shape is seen before depth is allocated.
 
 **Stratify — review depth is allocated by risk, not uniformly**
 

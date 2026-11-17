@@ -21,6 +21,8 @@ Runs last: the other passes have mapped the real requirements; now judge which c
 
 Accept an abstraction only for real isolation, ownership, substitution, invariants, testability, or protocol boundaries. Ask: *what specific change becomes cheaper because this exists?*
 
+**Requirement check** — every cache, queue, circuit breaker, replica, workflow engine, service split, shard, event log, or plugin system the artifact has or proposes names the requirement that demands it (kernel Hard Rule 6). None → deletion candidate; a plausible future need → Deferred with its trigger.
+
 **Deletion hunt** — ask continuously:
 
 * Can stronger ownership remove this lock? Stronger typing remove this validation?

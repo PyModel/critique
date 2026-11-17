@@ -15,6 +15,7 @@ Inspect:
 * structured logs with request and correlation IDs; traces across boundaries
 * error categories; latency histograms; queue depth; saturation; retry counts
 * dependency health; state-transition visibility; audit trails where required
+* degradation, fallback, shed, retry-exhaustion, and dead-letter events each countable
 * SLOs tied to user-visible behavior
 
 Flag:

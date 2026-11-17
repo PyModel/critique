@@ -15,6 +15,8 @@ phase: frame
 * What is the source of truth for each important piece of state, and who owns each transition?
 * Which operations must be atomic; which may be eventually consistent?
 * What workload shape, latency, and throughput actually matter?
+* Which paths carry high consequence (kernel Tiers), and what loss or staleness does each tolerate?
+* What demands each major mechanism the artifact has or proposes — a user need, an invariant, an obligation, an incident, a measurement? (Pass 16 judges the ones with no answer.)
 * What is the smallest architecture meeting those requirements — and what would you build if none of this existed yet?
 
 State the intended end state in 1–3 sentences. Every later finding is judged against it.

@@ -14,7 +14,9 @@ Attack existing suites for:
 
 * tests coupled to implementation, or that only exercise mocks
 * assertions that cannot fail; happy-path-only coverage
-* shared state between tests; timing-dependent flakiness
+* shared state between tests; sleeps and timing luck where a fake clock, seeded randomness, or a barrier belongs
+* tests asserting the historical bug shape, or rewritten to match a refactor instead of intended behavior
+* disabled or skipped tests — each goes to the Workaround Ledger
 * no test ever crossing a real boundary (database, queue, network)
 * benchmarks on unrepresentative workloads
 

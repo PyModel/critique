@@ -20,8 +20,17 @@ The current implementation is evidence, not authority. Judge every part against 
 * duplicate config keys (`retry_count` / `max_retries`) and duplicate state across layers
 * the same decision rule (permission, validation, retry, derivation, routing) implemented in more than one place
 * names that leak retired infrastructure or no longer match behavior (`MongoOrderStore` on Postgres; `processOrder` that handles refunds)
+* tests that assert a historical bug; configuration that has become the code
 
 For each candidate state: why it exists, who still depends on it, and whether removing it changes user-visible behavior.
+
+**Preconditions** — a Delete, Unify, or Rename verdict becomes a Remediation step only with:
+
+* a test pinning the behavior worth keeping — written first where missing, asserting intended behavior, not the historical bug shape
+* every caller of the changed surface enumerated: code, tests, config, docs, CI, downstream consumers
+* a rollback path
+* no migration in flight on the same surface
+* the telemetry, alerts, dashboards, and runbooks that name what is removed, updated in the same step
 
 **Verdicts** feed the Workaround Ledger and the Shape Change section:
 
@@ -34,6 +43,5 @@ For each candidate state: why it exists, who still depends on it, and whether re
 Rules:
 
 * `git blame` is not architectural authority. "It has always been this way" is inertia, not a constraint.
-* Removal of code must not silently remove its telemetry, alerts, or tests of intended behavior.
 * Deletion and replacement are separate remediation steps.
-* Do not apply structural cleanup to a hotfix or security backport; there, a minimal targeted change wins and the debt goes to Deferred.
+* A constrained change (kernel Purpose) gets no structural cleanup: every verdict here goes to Deferred with its trigger.
