@@ -1,0 +1,6 @@
+id,prompt
+crit-01,"critique billing/refunds.py"
+crit-02,"critique payout-design.md"
+crit-03,"critique app/routes/orders.py"
+crit-04,"prod incident (see INCIDENT.md) — critique hotfix.diff before we ship it tonight"
+crit-05,"critique DESIGN.md — I want the full review, every section, not a quick look"

@@ -1,0 +1,10 @@
+--- a/pricing/discounts.py
++++ b/pricing/discounts.py
+@@ -22,6 +22,8 @@ def apply_discount_v2(cart, code):
+     """Web checkout path."""
+     promo = PROMOS.get(code)
++    if promo is None:
++        return cart.total
+     if FLAGS.get("USE_LEGACY_STACKING"):
+         return _apply_legacy(cart, promo)
+     return max(cart.total - promo.amount, 0)
