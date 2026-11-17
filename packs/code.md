@@ -10,6 +10,5 @@ Membership only. A listed pass runs iff its triggers match; order is fixed by th
 
 ## Notes
 
-- Output uses the Code tier. Replacement Implementation is on by default; audit-only only when the user asks.
-- Concurrency: Pass 4 owns the scenario, Pass 18 the mechanism, Pass 2 only when neither runs. Report once.
-- Performance findings state time/space complexity deltas.
+- Replacement Implementation is on by default; audit-only only when the user asks.
+- A file reviewed alone is still part of a system: follow its entry points and callers far enough to settle every absence claim (kernel Hard Rule 1).
