@@ -52,7 +52,8 @@ Packs reference passes, never other packs.
 1. No invented defects — an item that matches nothing in the artifact is skipped silently (Hard Rule 1).
 2. One owner per defect — state in a Dedupe line which pass reports overlaps.
 3. Fixes follow the kernel's Fix Validation unchanged; passes never define their own validation or evidence labels.
-4. `scripts/check.py` is the wiring spec: ids, slugs, phases, pack membership, routing, version vs changelog, dangling pass references. CI runs it on every push; its failure messages name the broken invariant.
+4. `scripts/check.py` is the wiring spec: ids, slugs, phases, pack membership, routing, version vs changelog, dangling pass and Hard Rule references, eval case structure. CI runs it on every push; its failure messages name the broken invariant.
+5. Wiring is not behavior. A new or changed kernel rule gets an eval case, run against the previous release and this one, with both outcomes recorded — see `evals/README.md`.
 
 ## Worked example
 
