@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="208" viewBox="0 0 1080 208" role="img" aria-labelledby="title">
+  <title id="title">Critique</title>
+  <rect width="1080" height="208" rx="12" fill="#f5f1e8"/>
+  <text x="51" y="141" fill="#202820" font-family="'Instrument Serif', Georgia, serif" font-size="109" letter-spacing="-5">Critique</text>
+  <g fill="none" stroke="#677265" stroke-width="5" stroke-linecap="round">
+    <path d="M755 61h77m17 0h98"/>
+    <path d="M778 91h63m18 0h118"/>
+    <path d="M778 121h103m18 0h61"/>
+    <path d="M755 151h72m17 0h58"/>
+  </g>
+  <path d="M847 76c21-11 99-13 130-4 20 6 17 26-3 32-27 8-109 8-127-1-16-8-9-21 9-28" fill="none" stroke="#ae3e26" stroke-width="4" stroke-linecap="round"/>
+</svg>
