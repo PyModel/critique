@@ -27,9 +27,9 @@ A codebase too large to hold in view is surveyed from its skeleton first — sig
 * **Tier B (risk-sampled):** the rest — pattern-level review (error-handling style, N+1 call sites, blocking I/O, unbounded queries), spot-check the outliers
 * **Tier C (structural):** module boundaries, dependency direction, dead code mass — Passes 14 and 16 at architecture level
 
-**Coverage ledger — mandatory in output**
+**Coverage ledger — mandatory.** Default risk review may sample B and examine C structurally; label both. In inventory mode, enumerate in-scope source, configs, build/release definitions, migrations, jobs, tests and public entry points before choosing depth. Include ignored/generated/vendor code only when relevant to the shipped behavior; record exclusions. Map critical actors, state owners, sinks and irreversible effects across file boundaries. Risk order still decides where to start, not what counts as done.
 
-State what was reviewed at which tier and what was not reviewed at all. An unaudited directory listed as such is honest scope; an implied full review that actually sampled is a lie.
+Use `path or flow | risk | traced / sampled / not examined / out of scope | evidence or reason | next action`. “Traced” means the relevant path and guard were followed to their effect, not merely that a file was opened. For large trees use nonoverlapping groups with counts and separately name high-risk exceptions. Reconcile counts to the inventory; for incomplete enumeration say which root remains unenumerated. Any in-scope sampled/unexamined item means **partial coverage**, with a resumable next item. Even complete scope coverage is not proof of zero defects.
 
 **Codebase-specific attack surface**
 

@@ -1,6 +1,6 @@
 # Seller payouts — design
 
-Sellers are paid nightly for the previous day's settled orders.
+Sellers are paid nightly for the previous day's settled orders. An accepted bank transfer is irreversible: the payout service cannot recall it.
 
 ## Flow
 

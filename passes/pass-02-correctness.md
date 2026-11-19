@@ -20,6 +20,7 @@ Attack:
 * money and quantity arithmetic: rounding, currency minor units, unit mismatches
 * encoding and Unicode edge cases
 * timezones, clock skew, leap time
+* native/FFI or binary boundaries: trace who owns memory, bounds and integer width conversions, alignment, partial initialization, cleanup and platform/ABI differences. Use documented contracts, safe boundary-value tests or existing sanitizer diagnostics; do not create corruption inputs
 * schema or serialization mismatches between producer and consumer
 * pagination correctness; deletion semantics; mutable historical records
 

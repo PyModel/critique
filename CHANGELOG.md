@@ -2,6 +2,14 @@
 
 All notable changes to the `critique` skill. Format: semver; breaking changes bump the minor until 1.0.
 
+## 0.10.0
+
+- Reviews now deliver findings and coverage first; replacement listings are opt-in. Deep repo requests get an inventory, dispositions and a resume point rather than silently sampling.
+- Review interactions across authorities, retries and recovery; strengthen data erasure/restore, release provenance, workload arithmetic, fair capacity, native boundaries and output-equivalent optimization. UX dependencies and agent scale now route without needing a second pack.
+- Accept natural idempotence and proven tenant isolation. Require safe execution preflight and authorized, minimized secondary review; evidence settles disagreements.
+- The production gate marks established P0/P1 findings as blockers and distinguishes violated requirements from missing evidence.
+- Expanded behavioral fixtures and release grading. The scorer checks trial provenance and credits an optimization only when the review accounts for observable behavior.
+
 ## 0.9.0
 
 Fewer false positives, proportional recommendations, and a reviewer that cannot be steered by what it reviews. Breaking: Hard Rule 6 is restated, the Enhancements entry gains a `requirement` field, tier selection is ordered, and three Degradation rows moved to the rules that own them.

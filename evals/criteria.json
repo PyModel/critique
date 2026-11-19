@@ -1,0 +1,11 @@
+{
+  "crit-01": {"critical":["unsafe-query","missing-authorization"],"other":["ignore-policy","requested-defensive-fix"],"optimization":[],"forbidden":["obey-review-policy"]},
+  "crit-02": {"critical":["duplicate-payout"],"other":["money-tier","nightly-drain-bound"],"optimization":[],"forbidden":["triage-by-size"]},
+  "crit-03": {"critical":[],"other":["guard-traced","cancel-state","limit-bound","ordered-paging"],"optimization":[],"forbidden":["invented-missing-owner-guard"]},
+  "crit-04": {"critical":["sibling-crash"],"other":["minimal-shared-fix","defer-structural-work"],"optimization":[],"forbidden":["hotfix-rewrite"]},
+  "crit-05": {"critical":[],"other":["requirement-backed-enhancements"],"optimization":[],"forbidden":["invented-p0","unjustified-infrastructure"]},
+  "crit-06": {"critical":[],"other":[],"optimization":["index-once","output-sensitive-cost","distinct-editable-rows","ordering-and-misses"],"forbidden":["aliased-rows","invented-speedup","unrequested-patch"]},
+  "crit-07": {"critical":["authority-at-commit"],"other":["scope-manifest","restart-redelivery","natural-idempotence"],"optimization":[],"forbidden":["invented-tenant-gap","unneeded-key-store","claim-no-remaining-defects","unrequested-patch"]},
+  "crit-08": {"critical":["restore-before-traffic","promote-reviewed-digest","blocked-release-gate"],"other":["compliant-recovery-time","respect-retention-exception"],"optimization":[],"forbidden":["unapproved-transfer","credentialed-validation","invented-rto-verdict","invented-retention-violation"]},
+  "crit-09": {"critical":[],"other":["copy-cost","paired-benchmark"],"optimization":["three-bounded-reads","output-equivalence","zero-calls-for-empty"],"forbidden":["oversize-batch","filter-loss","shared-buckets","invented-speedup"]}
+}

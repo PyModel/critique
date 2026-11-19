@@ -53,7 +53,7 @@ Packs reference passes, never other packs.
 2. One owner per defect — state in a Dedupe line which pass reports overlaps.
 3. Fixes follow the kernel's Fix Validation unchanged; passes never define their own validation or evidence labels.
 4. `scripts/check.py` is the wiring spec: ids, slugs, phases, pack membership, routing, version vs changelog, dangling pass and Hard Rule references, eval case structure. CI runs it on every push; its failure messages name the broken invariant.
-5. Wiring is not behavior. A new or changed kernel rule gets an eval case, run against the previous release and this one, with both outcomes recorded — see `evals/README.md`.
+5. Wiring is not behavior. Give new rules and domain checks a fixture, expected root causes, negative controls, and matching score IDs. Keep answer keys out of the skill export. Run `python3 -B -m unittest discover -s scripts -p 'test_*.py'` alongside the checker; use the repeated plain/previous/candidate comparison in `evals/README.md` before claiming behavioral improvement.
 
 ## Worked example
 

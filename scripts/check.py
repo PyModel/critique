@@ -11,8 +11,10 @@ Invariants (each failure message names the one it breaks):
   kernel  - description double-quoted and <= 1024 chars; name lowercase-hyphenated;
             metadata.version == first CHANGELOG heading
   docs    - no stale terms; every 'Pass N' / 'Passes N, M–K' and 'Hard Rule N' reference resolves
-  evals   - every case in evals/cases.csv has exactly one rubric section and a fixture directory
+  evals   - nonempty prompts and fixtures; one rubric section and score definition per case
 """
+import csv
+import json
 import re
 import sys
 from pathlib import Path
@@ -63,8 +65,11 @@ def main():
             err(f"{f.name}: triggers list missing")
         elif re.search(r"^  - always$", triggers.group(1), re.M):
             always.add(num)
-        if not re.search(rf"^## Pass {int(num)} — ", text, re.M):
+        heading = re.search(rf"^## Pass {int(num)} — .+$", text, re.M)
+        if not heading:
             err(f"{f.name}: heading must be '## Pass {int(num)} — ...'")
+        elif not text[heading.end():].strip():
+            err(f"{f.name}: pass body is empty")
         if num in passes:
             err(f"{f.name}: duplicate pass number {num}")
         passes[num], slugs[num] = f, slug
@@ -137,13 +142,42 @@ def main():
     for f in (case_file, rubric_file):
         if not f.is_file():
             err(f"{f.relative_to(ROOT)}: missing")
-    cases = re.findall(r"^([a-z]+-\d+),", case_file.read_text(), re.M) if case_file.is_file() else []
+    cases = []
+    if case_file.is_file():
+        with case_file.open(newline="") as stream:
+            reader = csv.DictReader(stream)
+            if reader.fieldnames != ["id", "prompt"]:
+                err("evals/cases.csv: expected id,prompt header")
+            for row in reader:
+                case = row.get("id") or ""
+                if None in row or not re.fullmatch(r"[a-z]+-\d+", case) or not (row.get("prompt") or "").strip():
+                    err(f"evals/cases.csv:{reader.line_num}: invalid id or prompt")
+                else:
+                    cases.append(case)
+        if not cases:
+            err("evals/cases.csv: no cases")
     rubric = re.findall(r"^## ([a-z]+-\d+)$", rubric_file.read_text(), re.M) if rubric_file.is_file() else []
     if sorted(cases) != sorted(rubric) or len(set(cases)) != len(cases):
         err(f"evals: cases.csv ids {sorted(cases)} != rubric sections {sorted(rubric)}")
     for case in cases:
-        if not (evals / "fixtures" / case).is_dir():
-            err(f"evals/fixtures/{case}: fixture directory missing")
+        if not any(f.is_file() and f.stat().st_size for f in (evals / "fixtures" / case).rglob("*")):
+            err(f"evals/fixtures/{case}: no nonempty fixture file")
+    try:
+        criteria = json.loads((evals / "criteria.json").read_text())
+        if set(criteria) != set(cases):
+            err("evals/criteria.json: cases must match cases.csv")
+        for case, groups in criteria.items():
+            if set(groups) != {"critical", "other", "optimization", "forbidden"}:
+                err(f"{case}: invalid scoring groups")
+                continue
+            if any(not isinstance(group, list) for group in groups.values()):
+                err(f"{case}: scoring groups must be lists of criterion ids")
+                continue
+            ids = [item for group in groups.values() for item in group]
+            if not ids or len(ids) != len(set(ids)) or any(not re.fullmatch(r"[a-z][a-z0-9-]*", i) for i in ids):
+                err(f"{case}: empty or ambiguous scoring criteria")
+    except (OSError, ValueError, AttributeError, TypeError) as exc:
+        err(f"evals/criteria.json: {exc}")
 
     for e in errors:
         print(f"FAIL {e}")

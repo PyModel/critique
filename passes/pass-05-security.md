@@ -15,7 +15,7 @@ Assume:
 Inspect:
 
 * authentication; authorization; resource ownership; tenant isolation; IDOR
-* authorization per object on every read and write path, not per endpoint; every tenant-scoped query carries the tenant predicate
+* authorization per object on every read and write path, not per endpoint; establish the tenant boundary on every access via a verified query predicate, row policy, isolated store or equivalent; check the effective runtime identity and bypass paths before declaring a missing control
 * the same check on cache hits, retries, replays, fallbacks, background jobs, admin and recovery paths; tenant and scope derived from verified context, never from request fields
 * an entry point missing the authentication, authorization, validation, or limits its sibling entry points enforce
 * privilege escalation; least privilege; capability scoping
@@ -33,6 +33,6 @@ Inspect:
 
 Attack any mechanism enforced only by UI visibility, client logic, hidden IDs, undocumented convention, or obscurity.
 
-A security finding names the attacker, what they control, and what they obtain. A category without an exploit path is not a finding.
+A defensive finding names the actor, controlled input, intended control and reachable effect, grounded in code/config evidence. A category alone is not a finding. Verify by tracing enforcement or benign tests of the intended policy; do not construct exploits or test a live target. For queued work involving revocable rights, verify the required authority when the effect occurs, not just when enqueued.
 
 Security belongs in the boundary design, not in middleware bolted on afterward — prefer fixes that move enforcement to the owning boundary.

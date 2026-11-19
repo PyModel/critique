@@ -31,7 +31,9 @@ For source code, additionally:
 * allocations and string concatenation in loops; large structures copied per iteration
 * N+1 patterns; filters with no usable index; columns fetched and never read
 
-**Evidence discipline.** No optimization claim without a metric. Required for any claimed gain: baseline, profile identifying the bottleneck, hypothesis, re-run, comparison of distributions (p50/p95/p99, not averages), plus CPU, memory, allocations, I/O, network calls, and external API/model cost — and a check for regressions elsewhere. Cannot measure? Name the benchmark and label the claim HYPOTHETICAL.
+**Evidence discipline.** Locate the limiting resource in a representative baseline (profile, query plan, or deterministic work count). Compare doing nothing with the smallest candidate using paired runs, same inputs/environment, enough repetitions to show variance. Check warm/cold, skew, concurrency or tail latency only where they change the decision. Report the relevant time, peak memory, calls or cost, the denominator and the break-even point. Count output materialization and index/build overhead. A work-count reduction is not a wall-time speedup. Without measurements, state the experiment and decision threshold; do not invent seconds, speedup ratios or an SLO.
+
+Before recommending a faster path, check result equivalence: ordering, duplicates, missing values, ownership/aliasing, tenant visibility, durability and failure behavior as applicable. Include a counterexample that would reject a faster but incorrect candidate.
 
 For source code, every performance fix states its complexity delta, time and space (e.g. `O(n²) → O(n log n)`).
 

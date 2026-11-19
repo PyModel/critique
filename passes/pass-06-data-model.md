@@ -27,7 +27,7 @@ Review persistence independently of application logic.
 **Lifecycle**
 
 * migrations: expand/contract, backward and forward compatibility, rollback, irreversible steps
-* retention, archival, unbounded tables
+* retention, archival, unbounded tables. When personal or regulated data is present, map purpose, minimum fields, access, retention and deletion across primary records, exports, caches, logs and backups. Identify the actual obligation and exceptions; do not assume a legal regime. Trace one synthetic deletion through restore and the point where traffic resumes: can an old copy reintroduce erased data?
 * backups, restore, corruption recovery — tested or assumed?
 
 Ask:

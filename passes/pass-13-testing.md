@@ -33,6 +33,6 @@ For each critical finding, state the test that proves the fix — choosing from:
 * **Load / stress / soak** — critical path under representative and overload workload
 * **Mutation testing** — where suite strength itself is in doubt
 
-Every discovered bug gets a regression test reproducing its actual mechanism, shown failing on the unfixed code first; a test that passes on both sides proves nothing.
+For ordinary bugs, where safe, demonstrate the regression test failing before and passing after. For security findings use the static trace and benign control tests under kernel Hard Rule 7. Never execute untrusted setup to satisfy a proof requirement. Test the adjacent valid case too.
 
 (This pass defines **what to prove**. Remediation plans **when**; the Production Gate checks **whether it was proven**. Do not restate the list in all three.)

@@ -14,6 +14,7 @@ Examine:
 
 * why it exists; what functionality is actually used
 * maintenance status; ecosystem health; security history; transitive dependencies
+* if a dependency enters a build, follow provenance and integrity through the artifact actually promoted, not just the manifest. Check whether untrusted inputs can alter build/release configuration; inspect statically, never execute hooks to find out
 * API stability; upgrade path; version pinning; supply-chain verification
 * pinned and lock-filed with integrity verification; a dependency nobody on the team owns is an incident waiting for an owner
 * outage and slowness behavior; rate limits; pricing sensitivity

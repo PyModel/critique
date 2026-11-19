@@ -10,7 +10,7 @@ Membership only. A listed pass runs iff its triggers match; order is fixed by th
 
 ## Notes
 
-- Pass 21 owns stratification: Tier A at full rigor, Tier B pattern-sampled, Tier C structural. The Tier ledger goes in Coverage.
+- Pass 21 owns stratification: Tier A at full rigor, Tier B pattern-sampled, Tier C structural. Explicit deep/all/exhaustive requests use its inventory mode; the reconciled manifest goes in Coverage.
 - Never propose a big-bang rewrite. Sequence by dependency and risk; one coherent end state per remediation step.
 - Measure before optimizing: every performance claim names its metric.
-- A small repo (a few screens of file list) may use Triage.
+- A small repo may use Triage only under the kernel's tier rules; an explicit deep review is not a quick look.

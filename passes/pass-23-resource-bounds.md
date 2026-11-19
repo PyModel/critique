@@ -22,6 +22,8 @@ For each, answer:
 
 A **policy limit** (abuse, spend, safety, quota) and **overload** (no capacity now) are different outcomes even when both answer 429. A policy limit is enforced atomically across every process that claims to share it and stays closed when its store fails. Overload sheds — stale work first: bound the age of the oldest queued item, not only the depth.
 
+For shared capacity, test isolation and progress: can one tenant fill a global pool while others are within quota? Trace admission, fair scheduling, cancellation and recovery of the first healthy tenant. Under a partition or stale lease, identify who can still write and what enforces authority at the resource.
+
 An unbounded resource on a path reachable by untrusted input is a denial-of-service finding (Pass 5 severity applies). An unbounded resource elsewhere is an availability finding.
 
 Dedupe: this pass owns bounds and overload behavior; Pass 8 owns growth ceilings; Pass 18 owns task lifecycle leaks in code.

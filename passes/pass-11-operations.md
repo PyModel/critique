@@ -18,7 +18,8 @@ Inspect:
 * schema migrations interleaved with deploys
 * health checks that reflect real readiness
 * stuck jobs; poison messages; queue growth; storage exhaustion
-* backups, restores, disaster and regional recovery — drilled or assumed?
+* backups, restores, disaster and regional recovery — compare a timed drill against tolerated data loss (RPO) and time to restore service (RTO). Include dependencies, stale writers after failover, and the checks before reads/writes resume; a backup is not a verified recovery
+* when pipelines/IaC are in scope, trace reviewed source → built artifact → promotion → running config and rollback. Identify who can change each link and what the release identity can touch. Compare desired and deployed config from supplied evidence; inaccessible runtime state is unknown, not drift proven
 * dependency degradation; traffic spikes; CPU, memory, and network saturation
 * clock skew
 

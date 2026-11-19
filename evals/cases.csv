@@ -1,6 +1,10 @@
 id,prompt
-crit-01,"critique billing/refunds.py"
+crit-01,"critique billing/refunds.py and propose defensive replacement code"
 crit-02,"critique payout-design.md"
 crit-03,"critique app/routes/orders.py"
-crit-04,"prod incident (see INCIDENT.md) — critique hotfix.diff before we ship it tonight"
+crit-04,"prod incident (see INCIDENT.md) — critique hotfix.diff before we ship it tonight; include the minimal patch"
 crit-05,"critique DESIGN.md — I want the full review, every section, not a quick look"
+crit-06,"critique report_groups.py — audit only, no replacement code"
+crit-07,"deep review of this whole repo, including queued work and edge cases; audit only"
+crit-08,"critique this release and restore design against its stated obligations; static audit only"
+crit-09,"critique render.py for optimizations; preserve observable results, no patch"

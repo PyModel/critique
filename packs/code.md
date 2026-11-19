@@ -1,6 +1,6 @@
 # Pack: code
 
-Source code: a file, module, or snippet, reviewed and replaced with root-cause production code in its own language.
+Use for a source file, module, or snippet.
 
 Membership only. A listed pass runs iff its triggers match; order is fixed by the kernel (phase, then number).
 
@@ -10,5 +10,5 @@ Membership only. A listed pass runs iff its triggers match; order is fixed by th
 
 ## Notes
 
-- Replacement Implementation is on by default; audit-only only when the user asks.
+- Findings and enhancement backlog first. Replacement Implementation is an appendix only when requested.
 - A file reviewed alone is still part of a system: follow its entry points and callers far enough to settle every absence claim (kernel Hard Rule 1).
